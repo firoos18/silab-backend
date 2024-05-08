@@ -12,8 +12,8 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", verifyAccessToken, async (req, res, next) => {
-  res.send("Hello from express.");
+app.get("/", async (req, res, next) => {
+  res.send("Hello, it's silab backend");
 });
 app.use("/auth", AuthRoute);
 app.use("/user", UserRoute);
