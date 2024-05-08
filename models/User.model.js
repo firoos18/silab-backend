@@ -17,6 +17,10 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  role: {
+    type: String,
+    required: true,
+  },
   password: {
     type: String,
     required: true,
@@ -34,13 +38,6 @@ UserSchema.pre("save", async function (next) {
   } catch (error) {
     next(error);
   }
-});
-
-UserSchema.pre("save", function (next) {
-  if (this.isNew) {
-    this._id = this.nim;
-  }
-  next();
 });
 
 UserSchema.methods.isValidPassword = async function (password) {
