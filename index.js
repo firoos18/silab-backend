@@ -4,13 +4,19 @@ const morgan = require("morgan");
 require("dotenv").config();
 require("./helpers/init_mongodb");
 const AuthRoute = require("./routes/Auth.route");
+const UserRoute = require("./routes/User.route");
+const { verifyAccessToken } = require("./helpers/jwt_helper");
 
 const app = express();
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.get("/", verifyAccessToken, async (req, res, next) => {
+  res.send("Hello from express.");
+});
 app.use("/auth", AuthRoute);
+app.use("/user", UserRoute);
 
 app.use(async (req, res, next) => {
   next(createError.NotFound());
@@ -19,10 +25,8 @@ app.use(async (req, res, next) => {
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.send({
-    error: {
-      status: err.status || 500,
-      message: err.message,
-    },
+    status: err.status || 500,
+    message: err.message,
   });
 });
 
