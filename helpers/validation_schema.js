@@ -14,4 +14,11 @@ const loginSchema = Joi.object({
   password: Joi.string().min(8).required(),
 });
 
-module.exports = { registerSchema, loginSchema };
+const subjectSchema = Joi.object({
+  name: Joi.string().required(),
+  acronyms: Joi.string().lowercase().required(),
+  lecturer: Joi.string().required(),
+  classes: Joi.any(),
+});
+
+module.exports = { registerSchema, loginSchema, subjectSchema };

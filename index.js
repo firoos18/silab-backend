@@ -5,6 +5,7 @@ require("dotenv").config();
 require("./helpers/init_mongodb");
 const AuthRoute = require("./routes/Auth.route");
 const UserRoute = require("./routes/User.route");
+const SubjectRoute = require("./routes/Subject.route");
 const { verifyAccessToken } = require("./helpers/jwt_helper");
 
 const app = express();
@@ -17,6 +18,7 @@ app.get("/", async (req, res, next) => {
 });
 app.use("/auth", AuthRoute);
 app.use("/user", UserRoute);
+app.use("/subject", SubjectRoute);
 
 app.use(async (req, res, next) => {
   next(createError.NotFound());

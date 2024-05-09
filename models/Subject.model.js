@@ -6,6 +6,11 @@ const SubjectSchema = Schema({
     type: String,
     required: true,
   },
+  acronyms: {
+    type: String,
+    required: true,
+    lowercase: true,
+  },
   lecturer: {
     type: String,
     required: true,
@@ -14,6 +19,7 @@ const SubjectSchema = Schema({
     {
       type: Schema.Types.ObjectId,
       refs: "class",
+      required: true,
       default: [],
     },
   ],
