@@ -17,11 +17,13 @@ const SubjectSchema = Schema({
   },
   classes: [
     {
-      type: Schema.Types.ObjectId,
-      refs: "class",
-      required: true,
-      default: [],
+      id: { type: Schema.Types.ObjectId, refs: "class", required: true },
+      name: {
+        type: String,
+        required: true,
+      },
     },
+    { default: [] },
   ],
 });
 

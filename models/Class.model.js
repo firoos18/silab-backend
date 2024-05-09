@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const ClassSchema = Schema({
+  subject: {
+    type: String,
+    required: true,
+  },
   name: {
     type: String,
     required: true,
@@ -11,11 +15,11 @@ const ClassSchema = Schema({
     required: true,
   },
   startAt: {
-    type: Date,
+    type: String,
     required: true,
   },
   endAt: {
-    type: Date,
+    type: String,
     required: true,
   },
   assistants: [

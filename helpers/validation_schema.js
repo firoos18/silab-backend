@@ -21,4 +21,17 @@ const subjectSchema = Joi.object({
   classes: Joi.any(),
 });
 
-module.exports = { registerSchema, loginSchema, subjectSchema };
+const classSchema = Joi.object({
+  subject: Joi.string().required(),
+  name: Joi.string().required(),
+  day: Joi.string().required(),
+  startAt: Joi.string().required(),
+  endAt: Joi.string().required(),
+  assistants: Joi.any(),
+  quota: Joi.number().required(),
+  isFull: Joi.boolean(),
+  participants: Joi.any(),
+  learningModule: Joi.any(),
+});
+
+module.exports = { registerSchema, loginSchema, subjectSchema, classSchema };
