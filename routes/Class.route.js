@@ -13,4 +13,10 @@ router.patch("/:id", verifyAccessToken, ClassController.updateClass);
 
 router.delete("/:id", verifyAccessToken, ClassController.deleteClass);
 
+router.patch(
+  "/register/:id",
+  verifyAccessToken,
+  ClassController.registerToClassRoom
+);
+
 module.exports = router;

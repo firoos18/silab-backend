@@ -24,10 +24,13 @@ const ClassSchema = Schema({
   },
   assistants: [
     {
-      type: Schema.Types.ObjectId,
-      refs: "user",
-      default: [],
+      id: { type: Schema.Types.ObjectId, refs: "user", unique: true },
+      name: {
+        type: String,
+        required: true,
+      },
     },
+    { default: [] },
   ],
   quota: {
     type: Number,
@@ -40,8 +43,13 @@ const ClassSchema = Schema({
   },
   participants: [
     {
-      type: Schema.Types.ObjectId,
-      refs: "user",
+      id: { type: Schema.Types.ObjectId, refs: "user", unique: true },
+      name: {
+        type: String,
+        required: true,
+      },
+    },
+    {
       default: [],
     },
   ],
