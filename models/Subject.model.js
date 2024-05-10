@@ -6,11 +6,6 @@ const SubjectSchema = Schema({
     type: String,
     required: true,
   },
-  acronyms: {
-    type: String,
-    required: true,
-    lowercase: true,
-  },
   lecturer: {
     type: String,
     required: true,

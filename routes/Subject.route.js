@@ -5,12 +5,12 @@ const SubjectController = require("../controller/Subject.controller");
 
 router.get("/", verifyAccessToken, SubjectController.getAllSubjects);
 
-router.get("/:name", verifyAccessToken, SubjectController.getSubject);
+router.get("/:id", verifyAccessToken, SubjectController.getSubject);
 
 router.post("/", verifyAccessToken, SubjectController.addSubject);
 
-router.patch("/:name", verifyAccessToken, SubjectController.updateSubject);
+router.patch("/:id", verifyAccessToken, SubjectController.updateSubject);
 
-router.delete("/:name", verifyAccessToken, SubjectController.deleteSubject);
+router.delete("/:id", verifyAccessToken, SubjectController.deleteSubject);
 
 module.exports = router;

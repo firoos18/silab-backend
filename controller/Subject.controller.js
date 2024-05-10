@@ -24,8 +24,8 @@ async function getAllSubjects(req, res, next) {
 
 async function getSubject(req, res, next) {
   try {
-    const { name } = req.params;
-    const subject = await Subject.findOne({ acronyms: name });
+    const { id } = req.params;
+    const subject = await Subject.findById(id);
 
     const response = {
       status: 200,
@@ -67,8 +67,8 @@ async function addSubject(req, res, next) {
 
 async function updateSubject(req, res, next) {
   try {
-    const { name } = req.params;
-    const filter = { acronyms: name };
+    const { id } = req.params;
+    const filter = { _id: id };
     const data = req.body;
 
     const subject = await Subject.findOneAndUpdate(
@@ -96,12 +96,12 @@ async function updateSubject(req, res, next) {
 
 async function deleteSubject(req, res, next) {
   try {
-    const { name } = req.params;
+    const { id } = req.params;
 
-    const subject = await Subject.findOne({ acronyms: name });
+    const subject = await Subject.findById(id);
     if (!subject) throw createError.NotFound("Subject not found");
 
-    await Subject.deleteOne({ acronyms: name });
+    await Subject.deleteOne({ _id: id });
 
     const response = {
       status: 200,

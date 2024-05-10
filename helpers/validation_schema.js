@@ -16,7 +16,6 @@ const loginSchema = Joi.object({
 
 const subjectSchema = Joi.object({
   name: Joi.string().required(),
-  acronyms: Joi.string().lowercase().required(),
   lecturer: Joi.string().required(),
   classes: Joi.any(),
 });
