@@ -165,7 +165,10 @@ async function registerToClassRoom(req, res, next) {
     const { id } = req.params;
 
     const classRoom = await Class.findById(id);
+    if (!classRoom) throw createError.NotFound("Class Not Found.");
+
     const user = await User.findById(userId);
+    if (!user) throw createError.NotFound("User Not Found.");
 
     let isFull =
       classRoom.isFull || classRoom.participants.length === classRoom.quota;
@@ -218,6 +221,60 @@ async function registerToClassRoom(req, res, next) {
   }
 }
 
+async function unregisterFromClassRoom(req, res, next) {
+  try {
+    const { userId } = req.body;
+    const { id } = req.params;
+
+    const user = await User.findById(userId);
+    if (!user) throw createError.NotFound("User Not Found.");
+
+    const classRoom = await Class.findById(id);
+    if (!classRoom) throw createError.NotFound("Class Not Found.");
+
+    const isRegistered = await Class.findOne({
+      _id: id,
+      "participants._id": user.id,
+    });
+    if (!isRegistered) throw createError.Conflict("User Not Registered");
+
+    let updatedClassRoom = await Class.findOneAndUpdate(
+      { _id: classRoom._id },
+      {
+        $pull: {
+          participants: { _id: user._id },
+        },
+      },
+      {
+        returnOriginal: false,
+      }
+    );
+
+    if (updatedClassRoom.participants.length < updatedClassRoom.quota)
+      updatedClassRoom = await Class.findOneAndUpdate(
+        { _id: classRoom._id },
+        { $set: { isFull: false } },
+        { returnOriginal: false }
+      );
+
+    const response = {
+      status: 200,
+      message: "unregistered",
+      data: {
+        name: updatedClassRoom.name,
+        day: updatedClassRoom.day,
+        quota: updatedClassRoom.quota,
+        isFull: updatedClassRoom.isFull,
+        participants: updatedClassRoom.participants,
+      },
+    };
+
+    res.send(response);
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   getAllClasses,
   getClass,
@@ -225,4 +282,5 @@ module.exports = {
   updateClass,
   deleteClass,
   registerToClassRoom,
+  unregisterFromClassRoom,
 };

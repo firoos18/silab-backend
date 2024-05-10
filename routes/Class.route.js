@@ -19,4 +19,10 @@ router.patch(
   ClassController.registerToClassRoom
 );
 
+router.patch(
+  "/unregister/:id",
+  verifyAccessToken,
+  ClassController.unregisterFromClassRoom
+);
+
 module.exports = router;
