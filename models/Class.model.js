@@ -2,13 +2,15 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const ClassSchema = Schema({
-  subject: {
-    type: String,
+  subjectId: {
+    type: Schema.Types.ObjectId,
+    refs: "subject",
     required: true,
   },
   name: {
     type: String,
     required: true,
+    unique: true,
   },
   day: {
     type: String,
@@ -24,7 +26,7 @@ const ClassSchema = Schema({
   },
   assistants: [
     {
-      id: { type: Schema.Types.ObjectId, refs: "user", unique: true },
+      id: { type: Schema.Types.ObjectId, refs: "user", sparse: true },
       name: {
         type: String,
         required: true,
@@ -43,7 +45,7 @@ const ClassSchema = Schema({
   },
   participants: [
     {
-      id: { type: Schema.Types.ObjectId, refs: "user", unique: true },
+      id: { type: Schema.Types.ObjectId, refs: "user", sparse: true },
       name: {
         type: String,
         required: true,
@@ -55,8 +57,16 @@ const ClassSchema = Schema({
   ],
   learningModule: [
     {
-      type: Schema.Types.ObjectId,
-      refs: "module",
+      id: {
+        type: Schema.Types.ObjectId,
+        refs: "module",
+      },
+      name: {
+        type: String,
+        required: true,
+      },
+    },
+    {
       default: [],
     },
   ],

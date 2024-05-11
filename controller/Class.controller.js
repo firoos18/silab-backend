@@ -66,11 +66,17 @@ async function addClass(req, res, next) {
   try {
     const result = await classSchema.validateAsync(req.body);
 
+    const doesExist = await Class.findOne({ name: result.name });
+    if (doesExist)
+      throw createError.Conflict(`${result.name} is Already Added.`);
+
+    const doesSubjectExist = await Subject.findById(result.subjectId);
+    if (!doesSubjectExist) throw createError.NotFound("Class Not Found.");
+
     const classRoom = new Class(result);
     const savedClassRoom = await classRoom.save();
 
-    const filter = { name: result.subject };
-
+    const filter = { _id: result.subjectId };
     const subjectRelated = await Subject.findOneAndUpdate(
       filter,
       {
@@ -145,6 +151,13 @@ async function deleteClass(req, res, next) {
 
     const classRoom = await Class.findById(id);
     if (!classRoom) throw createError.NotFound("Class Not Found");
+
+    const subjectId = classRoom.subjectId;
+    await Subject.findOneAndUpdate(
+      { _id: subjectId },
+      { $pull: { classes: { _id: id } } },
+      { returnOriginal: false }
+    );
 
     await Class.deleteOne({ _id: id });
 
