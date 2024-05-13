@@ -8,6 +8,7 @@ const UserRoute = require("./routes/User.route");
 const SubjectRoute = require("./routes/Subject.route");
 const ClassRoute = require("./routes/Class.route");
 const RoleRoute = require("./routes/Role.route");
+const PresenceRoute = require("./routes/Presence.route");
 
 const app = express();
 app.use(morgan("dev"));
@@ -22,6 +23,7 @@ app.use("/user", UserRoute);
 app.use("/subject", SubjectRoute);
 app.use("/class", ClassRoute);
 app.use("/role", RoleRoute);
+app.use("/presence", PresenceRoute);
 
 app.use(async (req, res, next) => {
   next(createError.NotFound());

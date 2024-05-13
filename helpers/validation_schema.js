@@ -38,10 +38,18 @@ const roleSchema = Joi.object({
   desc: Joi.string().required(),
 });
 
+const presenceSchema = Joi.object({
+  classId: Joi.string().required(),
+  date: Joi.string().required(),
+  payload: Joi.string().required(),
+  participants: Joi.any(),
+});
+
 module.exports = {
   registerSchema,
   loginSchema,
   subjectSchema,
   classSchema,
   roleSchema,
+  presenceSchema,
 };

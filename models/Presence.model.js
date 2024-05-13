@@ -2,9 +2,9 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const PresenceSchema = Schema({
-  class: {
+  classId: {
     type: Schema.Types.ObjectId,
-    refs: "subject",
+    refs: "class",
   },
   date: {
     type: Date,
@@ -14,8 +14,14 @@ const PresenceSchema = Schema({
     type: String,
     required: true,
   },
-  participants: {
-    type: Schema.Types.ObjectId,
-    refs: "user",
-  },
+  participants: [
+    {
+      id: { type: Schema.Types.ObjectId, refs: "user" },
+      name: { type: String, required: true },
+    },
+    { default: [] },
+  ],
 });
+
+const Presence = mongoose.model("presence", PresenceSchema);
+module.exports = Presence;
