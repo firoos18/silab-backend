@@ -6,6 +6,10 @@ const RoleSchema = Schema({
     type: String,
     required: true,
   },
+  desc: {
+    type: String,
+    required: true,
+  },
 });
 
 const Role = mongoose.model("role", RoleSchema);

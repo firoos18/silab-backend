@@ -33,4 +33,15 @@ const classSchema = Joi.object({
   learningModule: Joi.any(),
 });
 
-module.exports = { registerSchema, loginSchema, subjectSchema, classSchema };
+const roleSchema = Joi.object({
+  name: Joi.string().required().lowercase(),
+  desc: Joi.string().required(),
+});
+
+module.exports = {
+  registerSchema,
+  loginSchema,
+  subjectSchema,
+  classSchema,
+  roleSchema,
+};
