@@ -5,7 +5,10 @@ require("dotenv").config();
 require("./helpers/init_mongodb");
 const AuthRoute = require("./routes/Auth.route");
 const UserRoute = require("./routes/User.route");
-const { verifyAccessToken } = require("./helpers/jwt_helper");
+const SubjectRoute = require("./routes/Subject.route");
+const ClassRoute = require("./routes/Class.route");
+const RoleRoute = require("./routes/Role.route");
+const PresenceRoute = require("./routes/Presence.route");
 
 const app = express();
 app.use(morgan("dev"));
@@ -17,6 +20,10 @@ app.get("/", async (req, res, next) => {
 });
 app.use("/auth", AuthRoute);
 app.use("/user", UserRoute);
+app.use("/subject", SubjectRoute);
+app.use("/class", ClassRoute);
+app.use("/role", RoleRoute);
+app.use("/presence", PresenceRoute);
 
 app.use(async (req, res, next) => {
   next(createError.NotFound());
@@ -33,5 +40,5 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(`Server started on ${PORT}`);
+  console.log(`Server started on port ${PORT}`);
 });
