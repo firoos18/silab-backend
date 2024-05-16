@@ -10,6 +10,7 @@ async function getAllSubjects(req, res, next) {
       status: 200,
       message: "success",
       data: subjects.map((subject) => ({
+        id: subject._id,
         name: subject.name,
         lecturer: subject.lecturer,
         classes: subject.classes,
