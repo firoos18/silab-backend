@@ -11,20 +11,18 @@ async function getAllClasses(req, res, next) {
     const response = {
       status: 200,
       message: "success",
-      data: {
-        classes: classes.map((classRoom) => ({
-          subject: classRoom.subject,
-          name: classRoom.name,
-          day: classRoom.day,
-          startAt: classRoom.startAt,
-          endAt: classRoom.endAt,
-          assistants: classRoom.assistants,
-          quota: classRoom.quota,
-          isFull: classRoom.isFull,
-          participants: classRoom.participants,
-          learningModule: classRoom.learningModule,
-        })),
-      },
+      data: classes.map((classRoom) => ({
+        subject: classRoom.subject,
+        name: classRoom.name,
+        day: classRoom.day,
+        startAt: classRoom.startAt,
+        endAt: classRoom.endAt,
+        assistants: classRoom.assistants,
+        quota: classRoom.quota,
+        isFull: classRoom.isFull,
+        participants: classRoom.participants,
+        learningModule: classRoom.learningModule,
+      })),
     };
 
     res.send(response);
@@ -288,6 +286,29 @@ async function unregisterFromClassRoom(req, res, next) {
   }
 }
 
+async function getClassQuota(req, res, next) {
+  try {
+    const { id } = req.params;
+
+    const doesExist = Class.findById(id);
+    if (!doesExist) throw createError.NotFound("Class Not Found.");
+
+    const pipeline = {
+      $match: { "fullDocument._id": id },
+    };
+
+    const changeStreams = await Class.watch(pipeline);
+    changeStreams.on("change", (change) => {
+      const classData = Class.findById(change.documentKey._id);
+      console.log(classData);
+    });
+
+    res.send("Get Class Quota");
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   getAllClasses,
   getClass,
@@ -296,4 +317,5 @@ module.exports = {
   deleteClass,
   registerToClassRoom,
   unregisterFromClassRoom,
+  getClassQuota,
 };

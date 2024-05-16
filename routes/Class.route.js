@@ -25,4 +25,6 @@ router.patch(
   ClassController.unregisterFromClassRoom
 );
 
+router.get("/:id/quota", verifyAccessToken, ClassController.getClassQuota);
+
 module.exports = router;
