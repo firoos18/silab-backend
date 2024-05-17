@@ -91,9 +91,7 @@ async function addClass(req, res, next) {
     const response = {
       status: 201,
       message: "success",
-      data: {
-        subjectRelated,
-      },
+      data: subjectRelated,
     };
 
     res.send(response);
