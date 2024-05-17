@@ -12,6 +12,7 @@ async function getAllClasses(req, res, next) {
       status: 200,
       message: "success",
       data: classes.map((classRoom) => ({
+        id: classRoom._id,
         subject: classRoom.subjectId,
         name: classRoom.name,
         day: classRoom.day,
