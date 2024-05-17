@@ -43,6 +43,8 @@ async function getClass(req, res, next) {
       status: 200,
       message: "success",
       data: {
+        id: classRoom._id,
+        subjectId: classRoom.subjectId,
         name: classRoom.name,
         day: classRoom.day,
         startAt: classRoom.startAt,
@@ -123,7 +125,8 @@ async function updateClass(req, res, next) {
       status: 200,
       message: "success",
       data: {
-        subject: updatedClass.subject,
+        id: updatedClass._id,
+        subjectId: updatedClass.subject,
         name: updatedClass.name,
         day: updatedClass.day,
         startAt: updatedClass.startAt,
@@ -217,6 +220,8 @@ async function registerToClassRoom(req, res, next) {
       status: 200,
       message: "added",
       data: {
+        id: updatedClassRoom._id,
+        subjectId: updatedClassRoom.subjectId,
         name: updatedClassRoom.name,
         day: updatedClassRoom.day,
         quota: updatedClassRoom.quota,
@@ -271,6 +276,8 @@ async function unregisterFromClassRoom(req, res, next) {
       status: 200,
       message: "unregistered",
       data: {
+        id: updatedClassRoom._id,
+        subjectId: updatedClassRoom.subjectId,
         name: updatedClassRoom.name,
         day: updatedClassRoom.day,
         quota: updatedClassRoom.quota,
