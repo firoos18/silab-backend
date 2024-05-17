@@ -21,7 +21,7 @@ const subjectSchema = Joi.object({
 });
 
 const classSchema = Joi.object({
-  subjectId: Joi.string(),
+  subjectId: Joi.string().required(),
   name: Joi.string().required(),
   day: Joi.string().required(),
   startAt: Joi.string().required(),
