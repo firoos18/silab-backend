@@ -52,7 +52,10 @@ async function getClass(req, res, next) {
         assistants: classRoom.assistants,
         quota: classRoom.quota,
         isFull: classRoom.isFull,
-        participants: classRoom.participants,
+        participants: classRoom.participants.map((participant) => ({
+          id: participant._id,
+          name: participant.name,
+        })),
         learningModule: classRoom.learningModule,
       },
     };
