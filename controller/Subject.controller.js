@@ -13,7 +13,10 @@ async function getAllSubjects(req, res, next) {
         id: subject._id,
         name: subject.name,
         lecturer: subject.lecturer,
-        classes: subject.classes,
+        classes: subject.classes.map((classRoom) => ({
+          classId: classRoom._id,
+          name: classRoom.name,
+        })),
       })),
     };
 
@@ -32,9 +35,13 @@ async function getSubject(req, res, next) {
       status: 200,
       message: "success",
       data: {
+        id: subject._id,
         name: subject.name,
         lecturer: subject.lecturer,
-        classes: subject.classes,
+        classes: subject.classes.map((classRoom) => ({
+          classId: classRoom._id,
+          name: classRoom.name,
+        })),
       },
     };
 
