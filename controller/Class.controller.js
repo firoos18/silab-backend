@@ -70,34 +70,22 @@ async function addClass(req, res, next) {
   try {
     const result = await classSchema.validateAsync(req.body);
 
-    const doesExist = await Class.findOne({ name: result.name });
+    const doesExist = await Class.findOne({
+      subjectId: result.subjectId,
+      name: result.name,
+    });
     if (doesExist)
       throw createError.Conflict(`${result.name} is Already Added.`);
 
     const doesSubjectExist = await Subject.findById(result.subjectId);
-    if (!doesSubjectExist) throw createError.NotFound("Class Not Found.");
+    if (!doesSubjectExist) throw createError.NotFound("Subject Not Found.");
 
     const classRoom = new Class(result);
-    const savedClassRoom = await classRoom.save();
-
-    const filter = { _id: result.subjectId };
-    const subjectRelated = await Subject.findOneAndUpdate(
-      filter,
-      {
-        $push: {
-          classes: {
-            _id: savedClassRoom.id,
-            name: savedClassRoom.name,
-          },
-        },
-      },
-      { returnOriginal: false }
-    );
+    await classRoom.save();
 
     const response = {
       status: 201,
       message: "success",
-      data: subjectRelated,
     };
 
     res.send(response);
@@ -295,29 +283,6 @@ async function unregisterFromClassRoom(req, res, next) {
   }
 }
 
-async function getClassQuota(req, res, next) {
-  try {
-    const { id } = req.params;
-
-    const doesExist = Class.findById(id);
-    if (!doesExist) throw createError.NotFound("Class Not Found.");
-
-    const pipeline = {
-      $match: { "fullDocument._id": id },
-    };
-
-    const changeStreams = await Class.watch(pipeline);
-    changeStreams.on("change", (change) => {
-      const classData = Class.findById(change.documentKey._id);
-      console.log(classData);
-    });
-
-    res.send("Get Class Quota");
-  } catch (error) {
-    next(error);
-  }
-}
-
 module.exports = {
   getAllClasses,
   getClass,
@@ -326,5 +291,4 @@ module.exports = {
   deleteClass,
   registerToClassRoom,
   unregisterFromClassRoom,
-  getClassQuota,
 };

@@ -1,6 +1,7 @@
 const Subject = require("../models/Subject.model");
 const { subjectSchema } = require("../helpers/validation_schema");
 const createError = require("http-errors");
+const Class = require("../models/Class.model");
 
 async function getAllSubjects(req, res, next) {
   try {
@@ -13,10 +14,6 @@ async function getAllSubjects(req, res, next) {
         id: subject._id,
         name: subject.name,
         lecturer: subject.lecturer,
-        classes: subject.classes.map((classRoom) => ({
-          classId: classRoom._id,
-          name: classRoom.name,
-        })),
       })),
     };
 
@@ -29,7 +26,9 @@ async function getAllSubjects(req, res, next) {
 async function getSubject(req, res, next) {
   try {
     const { id } = req.params;
+
     const subject = await Subject.findById(id);
+    const classes = await Class.find({ subjectId: id });
 
     const response = {
       status: 200,
@@ -38,10 +37,6 @@ async function getSubject(req, res, next) {
         id: subject._id,
         name: subject.name,
         lecturer: subject.lecturer,
-        classes: subject.classes.map((classRoom) => ({
-          classId: classRoom._id,
-          name: classRoom.name,
-        })),
       },
     };
 
