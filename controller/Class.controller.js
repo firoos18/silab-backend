@@ -6,24 +6,12 @@ const User = require("../models/User.model");
 
 async function getAllClasses(req, res, next) {
   try {
-    const classes = await Class.find();
+    const classes = await Class.find().populate("subjectId");
 
     const response = {
       status: 200,
       message: "success",
-      data: classes.map((classRoom) => ({
-        id: classRoom._id,
-        subjectId: classRoom.subjectId,
-        name: classRoom.name,
-        day: classRoom.day,
-        startAt: classRoom.startAt,
-        endAt: classRoom.endAt,
-        assistants: classRoom.assistants,
-        quota: classRoom.quota,
-        isFull: classRoom.isFull,
-        participants: classRoom.participants,
-        learningModule: classRoom.learningModule,
-      })),
+      data: classes,
     };
 
     res.send(response);
@@ -36,28 +24,13 @@ async function getClass(req, res, next) {
   try {
     const { id } = req.params;
 
-    const classRoom = await Class.findById(id);
+    const classRoom = await Class.findById(id).populate("subjectId");
     if (!classRoom) throw createError.NotFound("Class Not Found.");
 
     const response = {
       status: 200,
       message: "success",
-      data: {
-        id: classRoom._id,
-        subjectId: classRoom.subjectId,
-        name: classRoom.name,
-        day: classRoom.day,
-        startAt: classRoom.startAt,
-        endAt: classRoom.endAt,
-        assistants: classRoom.assistants,
-        quota: classRoom.quota,
-        isFull: classRoom.isFull,
-        participants: classRoom.participants.map((participant) => ({
-          id: participant._id,
-          name: participant.name,
-        })),
-        learningModule: classRoom.learningModule,
-      },
+      data: classRoom,
     };
 
     res.send(response);
@@ -77,11 +50,14 @@ async function addClass(req, res, next) {
     if (doesExist)
       throw createError.Conflict(`${result.name} is Already Added.`);
 
-    const doesSubjectExist = await Subject.findById(result.subjectId);
-    if (!doesSubjectExist) throw createError.NotFound("Subject Not Found.");
+    const relatedSubject = await Subject.findById(result.subjectId);
+    if (!relatedSubject) throw createError.NotFound("Subject Not Found.");
 
     const classRoom = new Class(result);
     await classRoom.save();
+
+    relatedSubject.classes.push(classRoom._id);
+    await relatedSubject.save();
 
     const response = {
       status: 201,
@@ -104,6 +80,15 @@ async function updateClass(req, res, next) {
     const filter = { _id: id };
     const updateData = req.body;
 
+    if (Object.hasOwn(updateData, "subjectId")) {
+      await Subject.findByIdAndUpdate(classRoom.subjectId, {
+        $pull: { classes: classRoom._id },
+      });
+      await Subject.findByIdAndUpdate(updateData.subjectId, {
+        $push: { classes: classRoom._id },
+      });
+    }
+
     const updatedClass = await Class.findOneAndUpdate(
       filter,
       {
@@ -115,19 +100,7 @@ async function updateClass(req, res, next) {
     const response = {
       status: 200,
       message: "success",
-      data: {
-        id: updatedClass._id,
-        subjectId: updatedClass.subject,
-        name: updatedClass.name,
-        day: updatedClass.day,
-        startAt: updatedClass.startAt,
-        endAt: updatedClass.endAt,
-        assistants: updatedClass.assistants,
-        quota: updatedClass.quota,
-        isFull: updatedClass.isFull,
-        participants: updatedClass.participants,
-        learningModule: updatedClass.learningModule,
-      },
+      data: updatedClass,
     };
 
     res.send(response);
@@ -210,15 +183,7 @@ async function registerToClassRoom(req, res, next) {
     const response = {
       status: 200,
       message: "added",
-      data: {
-        id: updatedClassRoom._id,
-        subjectId: updatedClassRoom.subjectId,
-        name: updatedClassRoom.name,
-        day: updatedClassRoom.day,
-        quota: updatedClassRoom.quota,
-        isFull: updatedClassRoom.isFull,
-        participants: updatedClassRoom.participants,
-      },
+      data: updatedClassRoom,
     };
 
     res.send(response);
@@ -266,15 +231,7 @@ async function unregisterFromClassRoom(req, res, next) {
     const response = {
       status: 200,
       message: "unregistered",
-      data: {
-        id: updatedClassRoom._id,
-        subjectId: updatedClassRoom.subjectId,
-        name: updatedClassRoom.name,
-        day: updatedClassRoom.day,
-        quota: updatedClassRoom.quota,
-        isFull: updatedClassRoom.isFull,
-        participants: updatedClassRoom.participants,
-      },
+      data: updatedClassRoom,
     };
 
     res.send(response);

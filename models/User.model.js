@@ -46,6 +46,21 @@ UserSchema.pre("save", async function (next) {
   }
 });
 
+UserSchema.set("toJSON", {
+  transform: (doc, ret) => {
+    ret.id = ret._id;
+    delete ret._id;
+    delete ret.__v;
+
+    return {
+      id: ret.id,
+      email: ret.email,
+      fullname: ret.fullname,
+      nim: ret.nim,
+    };
+  },
+});
+
 UserSchema.methods.isValidPassword = async function (password) {
   try {
     return await bcrypt.compare(password, this.password);

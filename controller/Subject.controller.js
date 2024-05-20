@@ -5,16 +5,12 @@ const Class = require("../models/Class.model");
 
 async function getAllSubjects(req, res, next) {
   try {
-    const subjects = await Subject.find();
+    const subjects = await Subject.find().populate("classes");
 
     const response = {
       status: 200,
       message: "success",
-      data: subjects.map((subject) => ({
-        id: subject._id,
-        name: subject.name,
-        lecturer: subject.lecturer,
-      })),
+      data: subjects,
     };
 
     res.send(response);
@@ -27,17 +23,12 @@ async function getSubject(req, res, next) {
   try {
     const { id } = req.params;
 
-    const subject = await Subject.findById(id);
-    const classes = await Class.find({ subjectId: id });
+    const subject = await Subject.findById(id).populate("classes");
 
     const response = {
       status: 200,
       message: "success",
-      data: {
-        id: subject._id,
-        name: subject.name,
-        lecturer: subject.lecturer,
-      },
+      data: subject,
     };
 
     res.send(response);
@@ -86,9 +77,7 @@ async function updateSubject(req, res, next) {
     const response = {
       status: 201,
       message: "updated",
-      data: {
-        subject,
-      },
+      data: subject,
     };
 
     res.send(response);

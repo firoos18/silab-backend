@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const ClassSchema = Schema({
   subjectId: {
     type: Schema.Types.ObjectId,
-    refs: "subject",
+    ref: "subject",
     required: true,
   },
   name: {
@@ -26,7 +26,7 @@ const ClassSchema = Schema({
   },
   assistants: [
     {
-      id: { type: Schema.Types.ObjectId, refs: "user", sparse: true },
+      id: { type: Schema.Types.ObjectId, ref: "user", sparse: true },
       name: {
         type: String,
         required: true,
@@ -45,7 +45,7 @@ const ClassSchema = Schema({
   },
   participants: [
     {
-      id: { type: Schema.Types.ObjectId, refs: "user", sparse: true },
+      id: { type: Schema.Types.ObjectId, ref: "user", sparse: true },
       name: {
         type: String,
         required: true,
@@ -59,7 +59,7 @@ const ClassSchema = Schema({
     {
       id: {
         type: Schema.Types.ObjectId,
-        refs: "module",
+        ref: "module",
       },
       name: {
         type: String,
@@ -70,6 +70,27 @@ const ClassSchema = Schema({
       default: [],
     },
   ],
+});
+
+ClassSchema.set("toJSON", {
+  transform: (doc, ret) => {
+    ret.id = ret._id;
+    delete ret._id;
+    delete ret.__v;
+
+    return {
+      id: ret.id,
+      subject: ret.subjectId,
+      name: ret.name,
+      quota: ret.quota,
+      isFull: ret.isFull,
+      day: ret.day,
+      startAt: ret.startAt,
+      endAt: ret.endAt,
+      participants: ret.participants,
+      learningModule: ret.learningModule,
+    };
+  },
 });
 
 const Class = mongoose.model("class", ClassSchema);

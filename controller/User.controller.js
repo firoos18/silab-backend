@@ -10,14 +10,7 @@ async function getAllUsers(req, res, next) {
       const response = {
         status: 200,
         message: "success",
-        data: {
-          users: users.map((user) => ({
-            email: user.email,
-            fullname: user.fullname,
-            nim: user.nim,
-            role: user.role,
-          })),
-        },
+        data: users,
       };
       res.send(response);
     }
@@ -26,14 +19,7 @@ async function getAllUsers(req, res, next) {
     const response = {
       status: 200,
       message: "success",
-      data: {
-        users: users.map((user) => ({
-          email: user.email,
-          fullname: user.fullname,
-          nim: user.nim,
-          role: user.role,
-        })),
-      },
+      data: users,
     };
     res.send(response);
   } catch (error) {
@@ -51,12 +37,7 @@ async function getUserByNim(req, res, next) {
     const response = {
       status: 200,
       message: "success",
-      data: {
-        email: user.email,
-        fullname: user.fullname,
-        nim: user.nim,
-        role: user.role,
-      },
+      data: user,
     };
 
     res.send(response);
