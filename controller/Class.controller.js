@@ -9,9 +9,7 @@ async function getAllClasses(req, res, next) {
     const classes = await Class.find()
       .populate("subjectId")
       .populate("participants")
-      .populate("assistants")
-      .populate("learningModule");
-
+      .populate("assistants");
     const response = {
       status: 200,
       message: "success",
@@ -31,8 +29,7 @@ async function getClass(req, res, next) {
     const classRoom = await Class.findById(id)
       .populate("subjectId")
       .populate("participants")
-      .populate("assistants")
-      .populate("learningModule");
+      .populate("assistants");
     if (!classRoom) throw createError.NotFound("Class Not Found.");
 
     const response = {
@@ -191,8 +188,7 @@ async function registerToClassRoom(req, res, next) {
     updatedClassRoom = await Class.findById(id)
       .populate("subjectId")
       .populate("participants")
-      .populate("assistants")
-      .populate("learningModule");
+      .populate("assistants");
 
     const response = {
       status: 200,
@@ -245,8 +241,7 @@ async function unregisterFromClassRoom(req, res, next) {
     updatedClassRoom = await Class.findById(id)
       .populate("subjectId")
       .populate("participants")
-      .populate("assistants")
-      .populate("learningModule");
+      .populate("assistants");
 
     const response = {
       status: 200,
