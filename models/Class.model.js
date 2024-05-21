@@ -26,11 +26,9 @@ const ClassSchema = Schema({
   },
   assistants: [
     {
-      id: { type: Schema.Types.ObjectId, ref: "user", sparse: true },
-      name: {
-        type: String,
-        required: true,
-      },
+      type: Schema.Types.ObjectId,
+      ref: "user",
+      sparse: true,
     },
     { default: [] },
   ],
@@ -45,11 +43,9 @@ const ClassSchema = Schema({
   },
   participants: [
     {
-      id: { type: Schema.Types.ObjectId, ref: "user", sparse: true },
-      name: {
-        type: String,
-        required: true,
-      },
+      type: Schema.Types.ObjectId,
+      ref: "user",
+      sparse: true,
     },
     {
       default: [],
@@ -57,14 +53,8 @@ const ClassSchema = Schema({
   ],
   learningModule: [
     {
-      id: {
-        type: Schema.Types.ObjectId,
-        ref: "module",
-      },
-      name: {
-        type: String,
-        required: true,
-      },
+      type: Schema.Types.ObjectId,
+      ref: "module",
     },
     {
       default: [],

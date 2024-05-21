@@ -6,7 +6,11 @@ const User = require("../models/User.model");
 
 async function getAllClasses(req, res, next) {
   try {
-    const classes = await Class.find().populate("subjectId");
+    const classes = await Class.find()
+      .populate("subjectId")
+      .populate("participants")
+      .populate("assistants")
+      .populate("learningModule");
 
     const response = {
       status: 200,
@@ -24,7 +28,11 @@ async function getClass(req, res, next) {
   try {
     const { id } = req.params;
 
-    const classRoom = await Class.findById(id).populate("subjectId");
+    const classRoom = await Class.findById(id)
+      .populate("subjectId")
+      .populate("participants")
+      .populate("assistants")
+      .populate("learningModule");
     if (!classRoom) throw createError.NotFound("Class Not Found.");
 
     const response = {
@@ -180,6 +188,12 @@ async function registerToClassRoom(req, res, next) {
         { returnOriginal: false }
       );
 
+    updatedClassRoom = await Class.findById(id)
+      .populate("subjectId")
+      .populate("participants")
+      .populate("assistants")
+      .populate("learningModule");
+
     const response = {
       status: 200,
       message: "added",
@@ -227,6 +241,12 @@ async function unregisterFromClassRoom(req, res, next) {
         { $set: { isFull: false } },
         { returnOriginal: false }
       );
+
+    updatedClassRoom = await Class.findById(id)
+      .populate("subjectId")
+      .populate("participants")
+      .populate("assistants")
+      .populate("learningModule");
 
     const response = {
       status: 200,
