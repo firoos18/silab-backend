@@ -19,13 +19,17 @@ const UserSchema = new Schema(
       required: true,
     },
     role: {
-      type: String,
-      lowercase: true,
+      type: [{ type: String, ref: "role" }],
+      default: ["mahasiswa"],
       required: true,
     },
     password: {
       type: String,
       required: true,
+    },
+    verified: {
+      type: Boolean,
+      default: false,
     },
   },
   {

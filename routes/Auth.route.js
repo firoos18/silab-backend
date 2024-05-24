@@ -10,4 +10,6 @@ router.post("/refresh-token");
 
 router.delete("/logout");
 
+router.post("/verifyOtp", AuthController.verifyOtp);
+
 module.exports = router;

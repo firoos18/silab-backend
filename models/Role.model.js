@@ -5,6 +5,7 @@ const RoleSchema = Schema({
   name: {
     type: String,
     required: true,
+    enum: ["mahasiswa", "dosen", "laboran", "asisten"],
   },
   desc: {
     type: String,

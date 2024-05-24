@@ -2,6 +2,9 @@ const createError = require("http-errors");
 const User = require("../models/User.model");
 const { registerSchema, loginSchema } = require("../helpers/validation_schema");
 const { signAccessToken } = require("../helpers/jwt_helper");
+const bcrypt = require("bcrypt");
+const Otp = require("../models/Otp.model");
+const mailSender = require("../helpers/email_transporter");
 
 async function register(req, res, next) {
   try {
@@ -12,14 +15,8 @@ async function register(req, res, next) {
       throw createError.Conflict(`${result.email} is already been registered.`);
 
     const user = new User(result);
-    const savedUser = await user.save();
-    const accessToken = await signAccessToken(savedUser.id);
-
-    res.send({
-      fullname: savedUser.fullname,
-      nim: savedUser.nim,
-      token: accessToken,
-      message: "User Registered Successfully",
+    await user.save().then((result) => {
+      sendOtpVerificationEmail(result, res, next);
     });
   } catch (error) {
     if (error.isJoi === true) error.status = 422;
@@ -53,7 +50,82 @@ async function login(req, res, next) {
   }
 }
 
+async function sendOtpVerificationEmail({ _id, email }, res, next) {
+  try {
+    const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
+
+    const saltRounds = 10;
+    const hashedOtp = await bcrypt.hash(otp, saltRounds);
+
+    const newOtp = new Otp({
+      userId: _id,
+      otp: hashedOtp,
+      createdAt: Date.now(),
+      expiresAt: Date.now() + 300000,
+    });
+    await newOtp.save();
+
+    await mailSender(
+      email,
+      "Email Verification",
+      `<p> Enter OTP Code below to verify your email address </p> <br/>
+    <p><b>${otp}<b></p>
+  `
+    );
+
+    const response = {
+      status: 200,
+      message: "Verification OTP email sent",
+      data: {
+        userId: _id,
+        email: email,
+      },
+    };
+
+    res.json(response);
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function verifyOtp(req, res, next) {
+  try {
+    const { userId, otp } = req.body;
+    if (!userId || !otp) {
+      throw createError.Conflict("Empty OTP details");
+    } else {
+      const userOtp = await Otp.findOne({ userId });
+      if (!userOtp) createError.NotFound("User OTP Not Found");
+
+      const expiresAt = userOtp.expiresAt;
+      const hashedOtp = userOtp.otp;
+
+      if (expiresAt < Date.now()) {
+        await Otp.deleteOne({ userId });
+        throw createError.NotFound(
+          "OTP Code has expired, please request for a new one"
+        );
+      } else {
+        const validOtp = await bcrypt.compare(otp, hashedOtp);
+
+        if (!validOtp) throw createError.Conflict("Invalid OTP Code");
+
+        await User.updateOne({ _id: userId }, { verified: true });
+        await Otp.deleteOne({ userId });
+
+        res.json({
+          status: 200,
+          message: "User verified",
+        });
+      }
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   register,
   login,
+  verifyOtp,
 };
