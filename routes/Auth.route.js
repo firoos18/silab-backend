@@ -12,4 +12,6 @@ router.delete("/logout");
 
 router.post("/verifyOtp", AuthController.verifyOtp);
 
+router.post("/resendOtp", AuthController.resendOtpVerificationEmail);
+
 module.exports = router;

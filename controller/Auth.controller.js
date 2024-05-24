@@ -88,6 +88,19 @@ async function sendOtpVerificationEmail({ _id, email }, res, next) {
   }
 }
 
+async function resendOtpVerificationEmail(req, res, next) {
+  try {
+    const { userId, email } = req.body;
+
+    if (!userId || !email) throw createError.Conflict("Empty user details");
+
+    await Otp.deleteMany({ userId });
+    sendOtpVerificationEmail({ _id: userId, email }, res, next);
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function verifyOtp(req, res, next) {
   try {
     const { userId, otp } = req.body;
@@ -128,4 +141,5 @@ module.exports = {
   register,
   login,
   verifyOtp,
+  resendOtpVerificationEmail,
 };
