@@ -27,7 +27,6 @@ async function register(req, res, next) {
 async function login(req, res, next) {
   try {
     const result = await loginSchema.validateAsync(req.body);
-    console.log(result.password);
     const user = await User.findOne({ email: result.email });
     if (!user) throw createError.NotFound("User not registered");
 
@@ -37,11 +36,16 @@ async function login(req, res, next) {
 
     const accessToken = await signAccessToken(user.id);
 
-    res.send({
-      fullname: user.fullname,
-      nim: user.nim,
-      token: accessToken,
-    });
+    const response = {
+      status: 200,
+      message: "success",
+      data: {
+        email: user.email,
+        token: accessToken,
+      },
+    };
+
+    res.send(response);
   } catch (error) {
     if (error.isJoi === true)
       return next(createError.BadRequest("Invalid Email / Password"));
