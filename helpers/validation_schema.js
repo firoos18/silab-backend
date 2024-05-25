@@ -5,7 +5,7 @@ const registerSchema = Joi.object({
   fullname: Joi.string().required(),
   nim: Joi.string().required(),
   password: Joi.string().min(8).required(),
-  repeat_password: Joi.ref("password"),
+  repeatPassword: Joi.ref("password"),
 });
 
 const loginSchema = Joi.object({
