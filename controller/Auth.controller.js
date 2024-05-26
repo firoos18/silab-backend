@@ -118,7 +118,7 @@ async function verifyOtp(req, res, next) {
       const hashedOtp = userOtp.otp;
 
       if (expiresAt < Date.now()) {
-        await Otp.deleteOne({ userId });
+        await Otp.deleteMany({ userId });
         throw createError.NotFound(
           "OTP Code has expired, please request for a new one"
         );
@@ -128,7 +128,7 @@ async function verifyOtp(req, res, next) {
         if (!validOtp) throw createError.Conflict("Invalid OTP Code");
 
         await User.updateOne({ _id: userId }, { verified: true });
-        await Otp.deleteOne({ userId });
+        await Otp.deleteMany({ userId });
 
         res.json({
           status: 200,
