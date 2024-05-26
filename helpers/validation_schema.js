@@ -44,6 +44,12 @@ const presenceSchema = Joi.object({
   participants: Joi.any(),
 });
 
+const resetPasswordSchema = Joi.object({
+  userId: Joi.string().required(),
+  newPassword: Joi.string().min(8).required(),
+  repeatNewPassword: Joi.ref("newPassword"),
+});
+
 module.exports = {
   registerSchema,
   loginSchema,
@@ -51,4 +57,5 @@ module.exports = {
   classSchema,
   roleSchema,
   presenceSchema,
+  resetPasswordSchema,
 };

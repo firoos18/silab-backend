@@ -10,8 +10,22 @@ router.post("/refresh-token");
 
 router.delete("/logout");
 
-router.post("/verifyOtp", AuthController.verifyOtp);
+router.post("/verify-otp", AuthController.verifyOtp);
 
-router.post("/resendOtp", AuthController.resendOtpVerificationEmail);
+router.post("/resend-otp", AuthController.resendOtpVerificationEmail);
+
+router.post("/reset-password", AuthController.resetPassword);
+
+router.post("/send-reset-password-otp", AuthController.sendResetPasswordOtp);
+
+router.post(
+  "/resend-reset-password-otp",
+  AuthController.resendResetPasswordOtp
+);
+
+router.post(
+  "/verify-reset-password-otp",
+  AuthController.verifyResetPasswordOtp
+);
 
 module.exports = router;
