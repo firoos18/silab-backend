@@ -181,11 +181,13 @@ async function resetPassword(req, res, next) {
 
 async function sendResetPasswordOtp(req, res, next) {
   try {
-    const { userId, email } = req.body;
+    const { email } = req.body;
 
     const emailExists = await User.findOne({ email: email });
     if (!emailExists)
       throw createError.NotFound("User with Given Email Not Found");
+
+    const userId = emailExists._id;
 
     const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
 
