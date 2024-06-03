@@ -65,6 +65,8 @@ UserSchema.set("toJSON", {
       email: ret.email,
       fullname: ret.fullname,
       nim: ret.nim,
+      role: ret.role,
+      paid: ret.paid,
     };
   },
 });
