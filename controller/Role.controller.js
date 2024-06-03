@@ -2,6 +2,10 @@ const createError = require("http-errors");
 const Role = require("../models/Role.model");
 const { roleSchema } = require("../helpers/validation_schema");
 
+export const config = {
+  runtime: "nodejs",
+};
+
 async function getAllRoles(req, res, next) {
   try {
     const roles = await Role.find();

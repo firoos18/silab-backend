@@ -2,6 +2,10 @@ const Subject = require("../models/Subject.model");
 const { subjectSchema } = require("../helpers/validation_schema");
 const createError = require("http-errors");
 
+export const config = {
+  runtime: "nodejs",
+};
+
 async function getAllSubjects(req, res, next) {
   try {
     const subjects = await Subject.find().populate("classes");

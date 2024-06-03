@@ -3,6 +3,10 @@ const createError = require("http-errors");
 const User = require("../models/User.model");
 const Subject = require("../models/Subject.model");
 
+export const config = {
+  runtime: "nodejs",
+};
+
 async function getAllSelectedSubjects(req, res, next) {
   try {
     const selectedSubject = await SelectedSubject.find()
