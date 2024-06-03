@@ -1,3 +1,7 @@
+export const config = {
+  runtime: "nodejs",
+};
+
 const express = require("express");
 const createError = require("http-errors");
 const morgan = require("morgan");
