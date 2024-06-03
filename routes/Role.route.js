@@ -1,7 +1,7 @@
 const express = require("express");
 const { verifyAccessToken } = require("../helpers/jwt_helper");
 const router = express.Router();
-const RoleController = require("../controller/Role.controller");
+const RoleController = require("../controller/Role.controller.mjs");
 
 router.get("/", verifyAccessToken, RoleController.getAllRoles);
 
