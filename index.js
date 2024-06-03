@@ -1,6 +1,7 @@
 const express = require("express");
 const createError = require("http-errors");
 const morgan = require("morgan");
+const http = require("http");
 require("dotenv").config();
 require("./helpers/init_mongodb");
 const AuthRoute = require("./routes/Auth.route");
@@ -39,8 +40,15 @@ app.use((err, req, res, next) => {
   });
 });
 
+const server = http.createServer(app);
+
+server.setTimeout(6000, (socket) => {
+  console.log("Request has timed out");
+  socket.end("Request has timed out");
+});
+
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
 });

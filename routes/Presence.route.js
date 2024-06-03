@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { verifyAccessToken } = require("../helpers/jwt_helper");
-const PresenceController = require("../controller/Presence.controller.mjs");
+const PresenceController = require("../controller/Presence.controller.js");
 
 router.get("/", verifyAccessToken, PresenceController.getAllPresences);
 

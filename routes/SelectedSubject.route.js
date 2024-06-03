@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { verifyAccessToken } = require("../helpers/jwt_helper");
-const SelectedSubjectController = require("../controller/SelectedSubject.controller.mjs");
+const SelectedSubjectController = require("../controller/SelectedSubject.controller.js");
 
 router.get(
   "/",
