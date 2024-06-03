@@ -1,7 +1,6 @@
 const Subject = require("../models/Subject.model");
 const { subjectSchema } = require("../helpers/validation_schema");
 const createError = require("http-errors");
-const Class = require("../models/Class.model");
 
 async function getAllSubjects(req, res, next) {
   try {

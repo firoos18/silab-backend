@@ -31,6 +31,10 @@ const UserSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    paid: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     toJSON: true,

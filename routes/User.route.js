@@ -7,4 +7,10 @@ router.get("/", verifyAccessToken, UserController.getAllUsers);
 
 router.get("/:nim", verifyAccessToken, UserController.getUserByNim);
 
+router.get(
+  "/update-payment/:nim",
+  verifyAccessToken,
+  UserController.updatePaymentStatus
+);
+
 module.exports = router;

@@ -45,6 +45,7 @@ async function login(req, res, next) {
       message: "success",
       data: {
         email: user.email,
+        role: user.role,
         token: accessToken,
       },
     };
