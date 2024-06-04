@@ -6,7 +6,7 @@ const SelectedSubjectSchema = new Schema({
   subjects: [
     {
       type: Schema.Types.ObjectId,
-      ref: "class",
+      ref: "subject",
     },
     { default: [] },
   ],

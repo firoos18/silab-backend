@@ -51,7 +51,7 @@ async function getSelectedSubjectByNim(req, res, next) {
 
     const selectedSubjectByUserId = await SelectedSubject.findOne({
       userId: user._id,
-    });
+    }).populate("subjects");
 
     const response = {
       status: 200,
