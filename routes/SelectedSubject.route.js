@@ -10,9 +10,9 @@ router.get(
 );
 
 router.get(
-  "/:id",
+  "/:nim",
   verifyAccessToken,
-  SelectedSubjectController.getSelectedSubjectById
+  SelectedSubjectController.getSelectedSubjectByNim
 );
 
 router.post(

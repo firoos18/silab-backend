@@ -3,10 +3,6 @@ const createError = require("http-errors");
 const User = require("../models/User.model");
 const Subject = require("../models/Subject.model");
 
-export const config = {
-  runtime: "nodejs",
-};
-
 async function getAllSelectedSubjects(req, res, next) {
   try {
     const selectedSubject = await SelectedSubject.find()
@@ -38,6 +34,29 @@ async function getSelectedSubjectById(req, res, next) {
       status: 200,
       message: success,
       data: selectedSubject,
+    };
+
+    res.send(response);
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function getSelectedSubjectByNim(req, res, next) {
+  try {
+    const { nim } = req.params;
+
+    const user = await User.findOne({ nim: nim });
+    if (!user) throw createError.NotFound("User not found.");
+
+    const selectedSubjectByUserId = await SelectedSubject.findOne({
+      userId: user._id,
+    });
+
+    const response = {
+      status: 200,
+      message: "success",
+      data: selectedSubjectByUserId,
     };
 
     res.send(response);
@@ -112,6 +131,7 @@ async function updateSelectedSubject(req, res, next) {
 module.exports = {
   getAllSelectedSubjects,
   getSelectedSubjectById,
+  getSelectedSubjectByNim,
   addSelectedSubject,
   updateSelectedSubject,
 };

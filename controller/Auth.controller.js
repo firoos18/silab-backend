@@ -10,10 +10,6 @@ const bcrypt = require("bcrypt");
 const Otp = require("../models/Otp.model");
 const mailSender = require("../helpers/email_transporter");
 
-export const config = {
-  runtime: "nodejs",
-};
-
 async function register(req, res, next) {
   try {
     const result = await registerSchema.validateAsync(req.body);

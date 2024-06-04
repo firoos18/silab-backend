@@ -4,10 +4,6 @@ const User = require("../models/User.model");
 const { presenceSchema } = require("../helpers/validation_schema");
 const crypto = require("crypto");
 
-export const config = {
-  runtime: "nodejs",
-};
-
 async function getAllPresences(req, res, next) {
   try {
     const { classId } = req.query;

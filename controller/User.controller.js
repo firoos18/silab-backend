@@ -1,10 +1,6 @@
 const User = require("../models/User.model");
 const createError = require("http-errors");
 
-export const config = {
-  runtime: "nodejs",
-};
-
 async function getAllUsers(req, res, next) {
   try {
     const { role } = req.query;

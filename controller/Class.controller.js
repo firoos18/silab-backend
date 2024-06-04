@@ -4,10 +4,6 @@ const { classSchema } = require("../helpers/validation_schema");
 const Subject = require("../models/Subject.model");
 const User = require("../models/User.model");
 
-export const config = {
-  runtime: "nodejs",
-};
-
 async function getAllClasses(req, res, next) {
   try {
     const classes = await Class.find()
