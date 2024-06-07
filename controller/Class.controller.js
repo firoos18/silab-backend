@@ -257,7 +257,7 @@ async function unregisterFromClassRoom(req, res, next) {
 
 async function getUserRegistrationStatus(req, res, next) {
   try {
-    const { subjectId, nim } = req.body;
+    const { subjectId, nim } = req.query;
 
     const user = await User.findOne({ nim: nim });
     if (!user) throw createError.NotFound("User not found.");
