@@ -255,6 +255,33 @@ async function unregisterFromClassRoom(req, res, next) {
   }
 }
 
+async function getUserRegistrationStatus(req, res, next) {
+  try {
+    const { subjectId, nim } = req.body;
+
+    const user = await User.findOne({ nim: nim });
+    if (!user) throw createError.NotFound("User not found.");
+
+    const subject = await Subject.findById(subjectId);
+    if (!subject) throw createError.NotFound("Subject not found.");
+
+    const classRegistration = await Class.find({
+      subjectId: subjectId,
+      participants: user.id,
+    });
+
+    const response = {
+      status: 200,
+      message: "success",
+      data: classRegistration,
+    };
+
+    res.send(response);
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   getAllClasses,
   getClass,
@@ -263,4 +290,5 @@ module.exports = {
   deleteClass,
   registerToClassRoom,
   unregisterFromClassRoom,
+  getUserRegistrationStatus,
 };

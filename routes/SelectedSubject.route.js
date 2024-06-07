@@ -15,12 +15,6 @@ router.get(
   SelectedSubjectController.getSelectedSubjectByNim
 );
 
-router.post(
-  "/",
-  verifyAccessToken,
-  SelectedSubjectController.addSelectedSubject
-);
-
 router.patch(
   "/",
   verifyAccessToken,

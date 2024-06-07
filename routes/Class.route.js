@@ -5,6 +5,12 @@ const ClassController = require("../controller/Class.controller.js");
 
 router.get("/", verifyAccessToken, ClassController.getAllClasses);
 
+router.get(
+  "/status",
+  verifyAccessToken,
+  ClassController.getUserRegistrationStatus
+);
+
 router.get("/:id", verifyAccessToken, ClassController.getClass);
 
 router.post("/", verifyAccessToken, ClassController.addClass);

@@ -9,6 +9,7 @@ const { signAccessToken } = require("../helpers/jwt_helper");
 const bcrypt = require("bcrypt");
 const Otp = require("../models/Otp.model");
 const mailSender = require("../helpers/email_transporter");
+const SelectedSubject = require("../models/SelectedSubject.model");
 
 async function register(req, res, next) {
   try {
@@ -134,6 +135,9 @@ async function verifyOtp(req, res, next) {
 
         await User.updateOne({ _id: userId }, { verified: true });
         await Otp.deleteMany({ userId });
+
+        const selectedSubject = new SelectedSubject({ userId: userId });
+        await selectedSubject.save();
 
         res.json({
           status: 200,
