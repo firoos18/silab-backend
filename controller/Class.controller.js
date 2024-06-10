@@ -265,7 +265,7 @@ async function getUserRegistrationStatus(req, res, next) {
     const subject = await Subject.findById(subjectId);
     if (!subject) throw createError.NotFound("Subject not found.");
 
-    const classRegistration = await Class.find({
+    const classRegistration = await Class.findOne({
       subjectId: subjectId,
       participants: user.id,
     });
