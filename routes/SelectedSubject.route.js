@@ -12,7 +12,7 @@ router.get(
 router.get(
   "/:nim",
   verifyAccessToken,
-  SelectedSubjectController.getSelectedSubjectByNim
+  SelectedSubjectController.getSelectedSubjectAndClass
 );
 
 router.patch(

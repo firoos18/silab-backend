@@ -2,6 +2,7 @@ const SelectedSubject = require("../models/SelectedSubject.model");
 const createError = require("http-errors");
 const User = require("../models/User.model");
 const Subject = require("../models/Subject.model");
+const Class = require("../models/Class.model");
 
 async function getAllSelectedSubjects(req, res, next) {
   try {
@@ -42,7 +43,7 @@ async function getSelectedSubjectById(req, res, next) {
   }
 }
 
-async function getSelectedSubjectByNim(req, res, next) {
+async function getSelectedSubjectAndClass(req, res, next) {
   try {
     const { nim } = req.params;
 
@@ -53,10 +54,29 @@ async function getSelectedSubjectByNim(req, res, next) {
       userId: user._id,
     }).populate("subjects");
 
+    const subjects = selectedSubjectByUserId.subjects;
+
+    const enrichedSubjects = await Promise.all(
+      subjects.map(async (subject) => {
+        const classes = await Class.find({
+          subjectId: subject._id,
+          participants: user._id,
+        });
+
+        return {
+          ...subject.toJSON(),
+          registeredClass: classes.length > 0 ? classes[0].toJSON() : null,
+        };
+      })
+    );
+
     const response = {
       status: 200,
       message: "success",
-      data: selectedSubjectByUserId,
+      data: {
+        ...selectedSubjectByUserId.toJSON(),
+        subjects: enrichedSubjects,
+      },
     };
 
     res.send(response);
@@ -100,6 +120,6 @@ async function updateSelectedSubject(req, res, next) {
 module.exports = {
   getAllSelectedSubjects,
   getSelectedSubjectById,
-  getSelectedSubjectByNim,
   updateSelectedSubject,
+  getSelectedSubjectAndClass,
 };
