@@ -18,6 +18,10 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
+    phoneNumber: {
+      type: String,
+      required: true,
+    },
     role: {
       type: [{ type: String, ref: "role" }],
       default: ["mahasiswa"],

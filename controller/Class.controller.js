@@ -169,7 +169,6 @@ async function registerToClassRoom(req, res, next) {
         $push: {
           participants: {
             _id: user.id,
-            name: user.fullname,
           },
         },
       },
