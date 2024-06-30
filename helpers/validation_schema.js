@@ -6,6 +6,7 @@ const registerSchema = Joi.object({
   nim: Joi.string().required(),
   password: Joi.string().min(8).required(),
   repeatPassword: Joi.ref("password"),
+  phoneNumber: Joi.string().required(),
 });
 
 const loginSchema = Joi.object({
