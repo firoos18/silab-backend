@@ -11,9 +11,8 @@ const AnnouncementSchema = new Schema({
     type: String,
     required: true,
   },
-  posterId: {
-    type: Schema.Types.ObjectId,
-    ref: "GridFSFile",
+  posterUrl: {
+    type: String,
     required: false,
   },
 });
@@ -28,6 +27,7 @@ AnnouncementSchema.set("toJSON", {
       id: ret.id,
       type: ret.type,
       desc: ret.desc,
+      posterUrl: ret.posterUrl,
     };
   },
 });

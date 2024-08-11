@@ -5,6 +5,7 @@ const http = require("http");
 const bodyParser = require("body-parser");
 require("dotenv").config();
 require("./helpers/init_mongodb");
+require("./helpers/init_supabase");
 const AuthRoute = require("./routes/Auth.route");
 const UserRoute = require("./routes/User.route");
 const SubjectRoute = require("./routes/Subject.route");

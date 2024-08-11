@@ -2,7 +2,9 @@ const express = require("express");
 const router = express.Router();
 const AnnouncementController = require("../controller/Announcement.controller");
 const { verifyAccessToken } = require("../helpers/jwt_helper");
-const { upload } = require("../middleware/upload");
+const multer = require("multer");
+
+const upload = multer();
 
 router.get("/", verifyAccessToken, AnnouncementController.getAllAnnouncements);
 
@@ -11,16 +13,14 @@ router.get("/:id", verifyAccessToken, AnnouncementController.getAnnouncement);
 router.post(
   "/",
   verifyAccessToken,
-  upload,
+  upload.single("file"),
   AnnouncementController.addAnnouncement
 );
-
-router.get("/:id/image", AnnouncementController.servePosterImage);
 
 router.patch(
   "/:id",
   verifyAccessToken,
-  upload,
+  upload.single("file"),
   AnnouncementController.editAnnouncement
 );
 

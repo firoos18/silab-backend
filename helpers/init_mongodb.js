@@ -1,28 +1,15 @@
 const mongoose = require("mongoose");
 
 mongoose
-  .connect(process.env.MONGODB_URI)
+  .connect(process.env.MONGODB_URI, {
+    dbName: process.env.DB_NAME,
+  })
   .then(() => {
     console.log("mongodb connected.");
   })
   .catch((err) => {
     console.log(err.message);
   });
-
-let gfs;
-mongoose.connection.once("open", () => {
-  gfs = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
-    bucketName: "posters",
-  });
-  console.log("GridFS initialized");
-});
-
-const getGfs = () => {
-  if (!gfs) {
-    throw new Error("gfs not initialized");
-  }
-  return gfs;
-};
 
 mongoose.connection.on("connected", () => {
   console.log("Mongoose connected to db");
@@ -40,5 +27,3 @@ process.on("SIGINT", async () => {
   await mongoose.connection.close();
   process.exit(0);
 });
-
-module.exports = { getGfs };
