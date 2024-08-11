@@ -5,7 +5,11 @@ const SubjectController = require("../controller/Subject.controller.js");
 
 router.get("/", verifyAccessToken, SubjectController.getAllSubjects);
 
-router.get("/details", verifyAccessToken, SubjectController.getSubjectsDetails);
+router.post(
+  "/details",
+  verifyAccessToken,
+  SubjectController.getSubjectsDetails
+);
 
 router.get("/:id", verifyAccessToken, SubjectController.getSubject);
 
