@@ -39,7 +39,9 @@ async function getSubjectsDetails(req, res, next) {
 
     const subjectsDetails = await Promise.all(
       subjects.map(async (subjectId) => {
-        const subjectDetails = await Subject.findById(subjectId);
+        const subjectDetails = await Subject.findById(subjectId).populate(
+          "classes"
+        );
         if (!subjectDetails) {
           throw new Error(`Subject with id ${subjectId} not found`);
         }
