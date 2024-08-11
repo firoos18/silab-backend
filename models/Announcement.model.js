@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const AnnouncementSchema = new Schema({
+  title: {
+    type: String,
+    required: true,
+  },
   type: {
     type: String,
     required: true,
@@ -25,6 +29,7 @@ AnnouncementSchema.set("toJSON", {
 
     return {
       id: ret.id,
+      title: ret.title,
       type: ret.type,
       desc: ret.desc,
       posterUrl: ret.posterUrl,

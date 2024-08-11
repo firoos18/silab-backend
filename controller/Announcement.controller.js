@@ -1,6 +1,5 @@
 const createError = require("http-errors");
 const Announcement = require("../models/Announcement.model");
-const getImageUrl = require("../helpers/get_image_url");
 const {
   uploadPosterImage,
   deletePosterImage,
@@ -33,12 +32,7 @@ async function getAnnouncement(req, res, next) {
     const response = {
       status: 200,
       message: "success",
-      data: {
-        id: announcement.id,
-        type: announcement.type,
-        desc: announcement.desc,
-        posterUrl: getImageUrl(req.protocol, req.get("host"), announcement),
-      },
+      data: announcement,
     };
 
     res.status(200).json(response);
@@ -49,11 +43,12 @@ async function getAnnouncement(req, res, next) {
 
 async function addAnnouncement(req, res, next) {
   try {
-    const { type, desc } = req.body;
+    const { type, desc, title } = req.body;
 
     let posterUrl = null;
 
     const announcement = new Announcement({
+      title: title,
       type: type,
       desc: desc,
     });
@@ -80,7 +75,7 @@ async function addAnnouncement(req, res, next) {
 async function editAnnouncement(req, res, next) {
   try {
     const { id } = req.params;
-    const { type, desc } = req.body;
+    const { type, desc, title } = req.body;
 
     const announcement = await Announcement.findById(id);
     if (!announcement)
@@ -95,6 +90,7 @@ async function editAnnouncement(req, res, next) {
       id,
       {
         $set: {
+          title: title ? title : announcement.title,
           type: type ? type : announcement.type,
           desc: desc ? desc : announcement.desc,
           posterUrl: req.file ? posterUrl : announcement.posterUrl,
