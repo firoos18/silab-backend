@@ -30,11 +30,22 @@ async function getSubjectsDetails(req, res, next) {
   try {
     const { subjects } = req.body;
 
-    let subjectsDetails = [];
-    for (i = 0; i < subjects.length; i++) {
-      const subjectDetails = await Subject.findById(subjects[i]);
-      subjectsDetails.push(subjectDetails.toJSON());
+    if (!Array.isArray(subjects)) {
+      return res.status(400).json({
+        status: 400,
+        message: "subjects should be an array",
+      });
     }
+
+    const subjectsDetails = await Promise.all(
+      subjects.map(async (subjectId) => {
+        const subjectDetails = await Subject.findById(subjectId);
+        if (!subjectDetails) {
+          throw new Error(`Subject with id ${subjectId} not found`);
+        }
+        return subjectDetails.toJSON();
+      })
+    );
 
     const response = {
       status: 200,
