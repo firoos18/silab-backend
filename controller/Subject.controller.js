@@ -4,7 +4,15 @@ const createError = require("http-errors");
 
 async function getAllSubjects(req, res, next) {
   try {
-    const subjects = await Subject.find().populate("classes");
+    const { semester } = req.query;
+
+    let subjects;
+
+    if (semester) {
+      subjects = await Subject.find({ semester: semester }).populate("classes");
+    } else {
+      subjects = await Subject.find().populate("classes");
+    }
 
     const response = {
       status: 200,

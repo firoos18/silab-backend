@@ -18,6 +18,7 @@ const subjectSchema = Joi.object({
   name: Joi.string().required(),
   lecturer: Joi.string().required(),
   classes: Joi.any(),
+  semester: Joi.number().required(),
 });
 
 const classSchema = Joi.object({
