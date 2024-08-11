@@ -2,6 +2,7 @@ const express = require("express");
 const createError = require("http-errors");
 const morgan = require("morgan");
 const http = require("http");
+const bodyParser = require("body-parser");
 require("dotenv").config();
 require("./helpers/init_mongodb");
 const AuthRoute = require("./routes/Auth.route");
@@ -11,11 +12,13 @@ const ClassRoute = require("./routes/Class.route");
 const RoleRoute = require("./routes/Role.route");
 const PresenceRoute = require("./routes/Presence.route");
 const SelectedSubjectRoute = require("./routes/SelectedSubject.route");
+const AnnouncementRoute = require("./routes/Announcement.route");
 
 const app = express();
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", async (req, res, next) => {
   res.send("Hello, it's silab backend");
@@ -27,6 +30,7 @@ app.use("/class", ClassRoute);
 app.use("/role", RoleRoute);
 app.use("/presence", PresenceRoute);
 app.use("/selected-subject", SelectedSubjectRoute);
+app.use("/announcement", AnnouncementRoute);
 
 app.use(async (req, res, next) => {
   next(createError.NotFound());
