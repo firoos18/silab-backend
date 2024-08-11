@@ -1,7 +1,6 @@
 const createError = require("http-errors");
 const Announcement = require("../models/Announcement.model");
 const getImageUrl = require("../helpers/get_image_url");
-const { getGfs } = require("../helpers/init_mongodb");
 const {
   uploadPosterImage,
   deletePosterImage,
@@ -14,14 +13,7 @@ async function getAllAnnouncements(req, res, next) {
     const response = {
       status: 200,
       message: "success",
-      data: announcementList.map((announcement) => ({
-        id: announcement.id,
-        type: announcement.type,
-        desc: announcement.desc,
-        posterUrl: announcement.posterId
-          ? getImageUrl(req.protocol, req.get("host"), announcement)
-          : null,
-      })),
+      data: announcementList,
     };
 
     res.status(200).json(response);
