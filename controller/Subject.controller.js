@@ -26,6 +26,28 @@ async function getAllSubjects(req, res, next) {
   }
 }
 
+async function getSubjectsDetails(req, res, next) {
+  try {
+    const { subjects } = req.body;
+
+    let subjectsDetails = [];
+    for (i = 0; i < subjects.length; i++) {
+      const subjectDetails = await Subject.findById(subjects[i]);
+      subjectsDetails.push(subjectDetails.toJSON());
+    }
+
+    const response = {
+      status: 200,
+      message: "success",
+      data: subjectsDetails,
+    };
+
+    res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function getSubject(req, res, next) {
   try {
     const { id } = req.params;
@@ -119,4 +141,5 @@ module.exports = {
   getSubject,
   updateSubject,
   deleteSubject,
+  getSubjectsDetails,
 };
