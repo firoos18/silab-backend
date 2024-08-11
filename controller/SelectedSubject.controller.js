@@ -87,9 +87,9 @@ async function getSelectedSubjectAndClass(req, res, next) {
 
 async function updateSelectedSubject(req, res, next) {
   try {
-    const { userId, subjects } = req.body;
+    const { nim, subjects } = req.body;
 
-    const user = await User.findById(userId);
+    const user = await User.findOne({ nim: nim });
     if (!user) throw createError.NotFound("User not found.");
 
     for (let index = 0; index < subjects.length; index++) {
