@@ -10,6 +10,7 @@ const bcrypt = require("bcrypt");
 const Otp = require("../models/Otp.model");
 const mailSender = require("../helpers/email_transporter");
 const SelectedSubject = require("../models/SelectedSubject.model");
+const { supabase } = require("../helpers/init_supabase");
 
 async function register(req, res, next) {
   try {
@@ -40,6 +41,7 @@ async function login(req, res, next) {
       throw createError.Unauthorized("Either Email / Password is Incorrect");
 
     const accessToken = await signAccessToken(user.id);
+    const initChannel = supabase.channel(user.id);
 
     const response = {
       status: 200,

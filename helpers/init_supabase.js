@@ -77,4 +77,5 @@ initSupabaseStorage();
 module.exports = {
   uploadPosterImage,
   deletePosterImage,
+  supabase,
 };
