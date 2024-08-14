@@ -41,7 +41,6 @@ async function login(req, res, next) {
       throw createError.Unauthorized("Either Email / Password is Incorrect");
 
     const accessToken = await signAccessToken(user.id);
-    const initChannel = supabase.channel(user.id);
 
     const response = {
       status: 200,

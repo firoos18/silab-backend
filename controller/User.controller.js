@@ -1,3 +1,7 @@
+const {
+  supabase,
+  handlePaymentStatusChange,
+} = require("../helpers/init_supabase");
 const User = require("../models/User.model");
 const createError = require("http-errors");
 
@@ -58,6 +62,16 @@ async function updatePaymentStatus(req, res, next) {
       { $set: { paid: true } },
       { returnOriginal: false }
     );
+
+    const channel = supabase.channel(user.nim);
+
+    const { error } = await supabase
+      .from("users")
+      .update({ payment_status: true })
+      .eq("nim", user.nim)
+      .select();
+
+    await handlePaymentStatusChange(nim);
 
     const response = {
       status: 200,

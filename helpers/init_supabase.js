@@ -1,4 +1,5 @@
 const { createClient } = require("@supabase/supabase-js");
+const { sendPushNotification } = require("../helpers/init_firebase_admin");
 require("dotenv").config();
 
 const supabase = createClient(
@@ -72,10 +73,39 @@ async function deletePosterImage(announcementID) {
   console.log(data);
 }
 
+async function handlePaymentStatusChange(nim) {
+  const { data: users, error } = await supabase
+    .from("users")
+    .select("fcm_token")
+    .eq("nim", nim)
+    .single();
+
+  if (error) {
+    console.error("Error fetching user:", error);
+    return;
+  }
+
+  if (users && users.fcm_token) {
+    const message = {
+      notification: {
+        title: "Status Pembayaran Telah Diperbarui!",
+        body: "Status pembayaran anda telah diperbarui. Silakan lanjutkan proses pemilihan kelas praktikum!",
+      },
+      token: users.fcm_token,
+      data: {
+        route: "/home/pilih-kelas",
+        nim: nim,
+      },
+    };
+    await sendPushNotification(message);
+  }
+}
+
 initSupabaseStorage();
 
 module.exports = {
   uploadPosterImage,
   deletePosterImage,
   supabase,
+  handlePaymentStatusChange,
 };

@@ -3,6 +3,7 @@ const Class = require("../models/Class.model");
 const { classSchema } = require("../helpers/validation_schema");
 const Subject = require("../models/Subject.model");
 const User = require("../models/User.model");
+const { supabase } = require("../helpers/init_supabase");
 
 async function getAllClasses(req, res, next) {
   try {
@@ -60,6 +61,14 @@ async function addClass(req, res, next) {
 
     const classRoom = new Class(result);
     await classRoom.save();
+
+    const { error } = await supabase.from("class").insert({
+      id: classRoom.id,
+      quota: classRoom.quota,
+    });
+
+    if (error)
+      throw createError.Conflict(`Supabase Database Class Error : `, error);
 
     relatedSubject.classes.push(classRoom._id);
     await relatedSubject.save();
@@ -182,6 +191,14 @@ async function registerToClassRoom(req, res, next) {
         filter,
         { $set: { isFull: true } },
         { returnOriginal: false }
+      );
+
+    const { error } = await supabase.rpc("add class participants", {
+      classid: classRoom.id,
+    });
+    if (error)
+      throw createError.Conflict(
+        `Supabase Add Class Participants Error : ${error.message}`
       );
 
     updatedClassRoom = await Class.findById(id)
