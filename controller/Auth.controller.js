@@ -78,7 +78,7 @@ async function sendOtpVerificationEmail({ _id, email }, res, next) {
       userId: _id,
       otp: hashedOtp,
       createdAt: Date.now(),
-      expiresAt: Date.now() + 18000,
+      expiresAt: Date.now() + 180000,
     });
     await newOtp.save();
 
@@ -212,7 +212,7 @@ async function sendResetPasswordOtp(req, res, next) {
       userId: userId,
       otp: hashedOtp,
       createdAt: Date.now(),
-      expiresAt: Date.now() + 18000,
+      expiresAt: Date.now() + 180000,
     });
     await newOtp.save();
 
@@ -220,8 +220,8 @@ async function sendResetPasswordOtp(req, res, next) {
       email,
       "Password Reset Verification",
       `<p> This OTP Code is used for resetting your password. </p> <br/>
-    <p><b>${otp}<b></p>
-  `
+      <p><b>${otp}<b></p>
+    `
     );
 
     const response = {
