@@ -52,7 +52,10 @@ async function getSelectedSubjectAndClass(req, res, next) {
 
     const selectedSubjectByUserId = await SelectedSubject.findOne({
       userId: user._id,
-    }).populate("subjects");
+    }).populate({
+      path: "subjects",
+      populate: { path: "classes", model: "class" },
+    });
 
     const subjects = selectedSubjectByUserId.subjects;
 
