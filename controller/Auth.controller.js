@@ -68,11 +68,17 @@ async function sendOtpVerificationEmail({ _id, email }, res, next) {
     const saltRounds = 10;
     const hashedOtp = await bcrypt.hash(otp, saltRounds);
 
+    const isUserExist = await User.findOne({ email: email });
+    if (!isUserExist)
+      throw createError.NotFound(`User with Email : ${email} is Not Found`);
+
+    await Otp.deleteMany({ userId: isUserExist._id });
+
     const newOtp = new Otp({
       userId: _id,
       otp: hashedOtp,
       createdAt: Date.now(),
-      expiresAt: Date.now() + 300000,
+      expiresAt: Date.now() + 18000,
     });
     await newOtp.save();
 
@@ -200,11 +206,13 @@ async function sendResetPasswordOtp(req, res, next) {
     const saltRounds = 10;
     const hashedOtp = await bcrypt.hash(otp, saltRounds);
 
+    await Otp.deleteMany({ userId: userId });
+
     const newOtp = new Otp({
       userId: userId,
       otp: hashedOtp,
       createdAt: Date.now(),
-      expiresAt: Date.now() + 300000,
+      expiresAt: Date.now() + 18000,
     });
     await newOtp.save();
 
@@ -233,11 +241,15 @@ async function sendResetPasswordOtp(req, res, next) {
 
 async function resendResetPasswordOtp(req, res, next) {
   try {
-    const { userId, email } = req.body;
+    const { email } = req.body;
 
-    if (!userId || !email) throw createError.Conflict("Empty user details");
+    if (!email) throw createError.Conflict("Empty user details");
 
-    await Otp.deleteMany({ userId });
+    const isUserExist = await User.findOne({ email: email });
+    if (!isUserExist)
+      throw createError.NotFound(`User with Email : ${email} is Not Found`);
+
+    await Otp.deleteMany({ userId: isUserExist._id });
     sendResetPasswordOtp(req, res, next);
   } catch (error) {
     next(error);
