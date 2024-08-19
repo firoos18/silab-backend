@@ -152,12 +152,12 @@ async function deleteClass(req, res, next) {
 
 async function registerToClassRoom(req, res, next) {
   try {
-    const { userId, selectedClasses } = req.body;
+    const { nim, selectedClasses } = req.body;
 
     let response;
     let classes = [];
 
-    const user = await User.findById(userId);
+    const user = await User.findOne({ nim: nim });
     if (!user) throw createError.NotFound("User Not Found.");
 
     for (const key in selectedClasses) {
