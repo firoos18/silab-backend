@@ -207,7 +207,8 @@ async function registerToClassRoom(req, res, next) {
         );
 
       let selectedClass = {};
-      selectedClass[subject.name] = updatedClassRoom.name;
+      selectedClass["subjectName"] = subject.name;
+      selectedClass["className"] = updatedClassRoom.name;
       classes.push(selectedClass);
     }
 
