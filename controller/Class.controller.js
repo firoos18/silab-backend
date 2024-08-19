@@ -152,64 +152,72 @@ async function deleteClass(req, res, next) {
 
 async function registerToClassRoom(req, res, next) {
   try {
-    const { userId } = req.body;
-    const { id } = req.params;
+    const { userId, selectedClasses } = req.body;
 
-    const classRoom = await Class.findById(id);
-    if (!classRoom) throw createError.NotFound("Class Not Found.");
+    let response;
+    let classes = [];
 
     const user = await User.findById(userId);
     if (!user) throw createError.NotFound("User Not Found.");
 
-    let isFull =
-      classRoom.isFull || classRoom.participants.length === classRoom.quota;
-    if (isFull) throw createError.Conflict("Classroom is already full");
+    for (const key in selectedClasses) {
+      const subject = await Subject.findById(key);
+      if (!subject) throw createError.NotFound("Subject Not Found.");
 
-    const isRegistered = await Class.findOne({
-      _id: id,
-      "participants._id": user.id,
-    });
-    if (isRegistered) throw createError.Conflict("User already registered");
+      const classRoom = await Class.findById(selectedClasses[key]);
+      if (!classRoom) throw createError.NotFound("Class Not Found.");
 
-    const filter = { _id: id };
-    let updatedClassRoom = await Class.findOneAndUpdate(
-      filter,
-      {
-        $push: {
-          participants: {
-            _id: user.id,
+      let isFull =
+        classRoom.isFull || classRoom.participants.length === classRoom.quota;
+      if (isFull) throw createError.Conflict("Classroom is already full");
+
+      const isRegistered = await Class.findOne({
+        _id: selectedClasses[key],
+        participants: user._id,
+      });
+      if (isRegistered) continue;
+
+      let updatedClassRoom = await Class.findOneAndUpdate(
+        { _id: selectedClasses[key] },
+        {
+          $push: {
+            participants: {
+              _id: user.id,
+            },
           },
         },
-      },
-      {
-        returnOriginal: false,
-      }
-    ).exec();
-
-    if (updatedClassRoom.participants.length === updatedClassRoom.quota)
-      updatedClassRoom = await Class.findOneAndUpdate(
-        filter,
-        { $set: { isFull: true } },
-        { returnOriginal: false }
+        {
+          returnOriginal: false,
+        }
       );
 
-    const { error } = await supabase.rpc("add class participants", {
-      classid: classRoom.id,
-    });
-    if (error)
-      throw createError.Conflict(
-        `Supabase Add Class Participants Error : ${error.message}`
-      );
+      const { error } = await supabase.rpc("add class participants", {
+        classid: classRoom.id,
+      });
+      if (error)
+        throw createError.Conflict(
+          `Supabase Add Class Participants Error : ${error.message}`
+        );
 
-    updatedClassRoom = await Class.findById(id)
-      .populate("subjectId")
-      .populate("participants")
-      .populate("assistants");
+      if (updatedClassRoom.participants.length === updatedClassRoom.quota)
+        updatedClassRoom = await Class.findOneAndUpdate(
+          filter,
+          { $set: { isFull: true } },
+          { returnOriginal: false }
+        );
 
-    const response = {
+      updatedClassRoom = await Class.findById(selectedClasses[key])
+        .populate("subjectId")
+        .populate("participants")
+        .populate("assistants");
+
+      classes.push(updatedClassRoom);
+    }
+
+    response = {
       status: 200,
-      message: "added",
-      data: updatedClassRoom,
+      message: "registered",
+      data: classes,
     };
 
     res.send(response);

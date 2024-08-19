@@ -11,6 +11,12 @@ router.get(
   ClassController.getUserRegistrationStatus
 );
 
+router.patch(
+  "/register",
+  verifyAccessToken,
+  ClassController.registerToClassRoom
+);
+
 router.get("/:id", verifyAccessToken, ClassController.getClass);
 
 router.post("/", verifyAccessToken, ClassController.addClass);
@@ -18,12 +24,6 @@ router.post("/", verifyAccessToken, ClassController.addClass);
 router.patch("/:id", verifyAccessToken, ClassController.updateClass);
 
 router.delete("/:id", verifyAccessToken, ClassController.deleteClass);
-
-router.patch(
-  "/register/:id",
-  verifyAccessToken,
-  ClassController.registerToClassRoom
-);
 
 router.patch(
   "/unregister/:id",
