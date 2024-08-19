@@ -206,12 +206,9 @@ async function registerToClassRoom(req, res, next) {
           { returnOriginal: false }
         );
 
-      updatedClassRoom = await Class.findById(selectedClasses[key])
-        .populate("subjectId")
-        .populate("participants")
-        .populate("assistants");
-
-      classes.push(updatedClassRoom);
+      let selectedClass = {};
+      selectedClass[subject.name] = updatedClassRoom.name;
+      classes.push(selectedClass);
     }
 
     response = {
