@@ -17,6 +17,12 @@ router.patch(
   ClassController.registerToClassRoom
 );
 
+router.get(
+  "/register/:nim",
+  verifyAccessToken,
+  ClassController.getUserRegisteredClass
+);
+
 router.get("/:id", verifyAccessToken, ClassController.getClass);
 
 router.post("/", verifyAccessToken, ClassController.addClass);

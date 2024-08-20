@@ -24,6 +24,10 @@ const ClassSchema = new Schema({
     type: String,
     required: true,
   },
+  ruang: {
+    type: String,
+    required: true,
+  },
   assistants: [
     {
       type: Schema.Types.ObjectId,
@@ -77,6 +81,7 @@ ClassSchema.set("toJSON", {
       day: ret.day,
       startAt: ret.startAt,
       endAt: ret.endAt,
+      ruang: ret.ruang,
       participants: ret.participants,
       learningModule: ret.learningModule,
     };

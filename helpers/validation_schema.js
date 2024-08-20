@@ -27,6 +27,7 @@ const classSchema = Joi.object({
   day: Joi.string().required(),
   startAt: Joi.string().required(),
   endAt: Joi.string().required(),
+  ruang: Joi.string().required(),
   assistants: Joi.any(),
   quota: Joi.number().required(),
   isFull: Joi.boolean(),

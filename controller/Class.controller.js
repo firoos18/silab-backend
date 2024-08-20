@@ -304,6 +304,26 @@ async function getUserRegistrationStatus(req, res, next) {
   }
 }
 
+async function getUserRegisteredClass(req, res, next) {
+  try {
+    const { nim } = req.params;
+
+    const user = await User.findOne({ nim: nim });
+    if (!user)
+      throw createError.NotFound(`User with NIM : ${nim} is Not Found.`);
+
+    const registeredClass = await Class.find({ participants: user.id });
+
+    res.status(200).json({
+      status: 200,
+      message: "success",
+      data: registeredClass,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   getAllClasses,
   getClass,
@@ -313,4 +333,5 @@ module.exports = {
   registerToClassRoom,
   unregisterFromClassRoom,
   getUserRegistrationStatus,
+  getUserRegisteredClass,
 };
