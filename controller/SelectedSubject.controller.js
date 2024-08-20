@@ -54,7 +54,14 @@ async function getSelectedSubjectAndClass(req, res, next) {
       userId: user._id,
     }).populate({
       path: "subjects",
-      populate: { path: "classes", model: "class" },
+      populate: {
+        path: "classes",
+        model: "class",
+        populate: {
+          path: "subjectId",
+          model: "subject",
+        },
+      },
     });
 
     const subjects = selectedSubjectByUserId.subjects;
