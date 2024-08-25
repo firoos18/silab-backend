@@ -21,6 +21,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const corsOpts = {
+  origin: "*",
+
+  methods: ["GET", "POST", "PATCH", "DELETE"],
+
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOpts));
+app.options("*", cors(corsOpts));
+
 app.get("/", async (req, res, next) => {
   res.send("Hello, it's silab backend");
 });
