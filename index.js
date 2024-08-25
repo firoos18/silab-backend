@@ -14,6 +14,7 @@ const RoleRoute = require("./routes/Role.route");
 const PresenceRoute = require("./routes/Presence.route");
 const SelectedSubjectRoute = require("./routes/SelectedSubject.route");
 const AnnouncementRoute = require("./routes/Announcement.route");
+const cors = require("cors");
 
 const app = express();
 app.use(morgan("dev"));
