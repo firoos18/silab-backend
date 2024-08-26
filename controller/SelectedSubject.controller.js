@@ -5,10 +5,27 @@ const Subject = require("../models/Subject.model");
 const Class = require("../models/Class.model");
 
 async function getAllSelectedSubjects(req, res, next) {
+  const { registered } = req.query;
+
   try {
-    const selectedSubject = await SelectedSubject.find()
-      .populate("userId")
-      .populate("subjects");
+    let selectedSubject;
+
+    if (!registered) {
+      selectedSubject = await SelectedSubject.find()
+        .populate("userId")
+        .populate("subjects");
+    } else {
+      selectedSubject = await SelectedSubject.find({
+        subjects:
+          registered === "1"
+            ? {
+                $ne: [],
+              }
+            : {
+                $eq: [],
+              },
+      });
+    }
 
     const response = {
       status: 200,
