@@ -7,10 +7,20 @@ const createError = require("http-errors");
 
 async function getAllUsers(req, res, next) {
   try {
-    const { role } = req.query;
+    const { role, paid } = req.query;
 
     if (role) {
       const users = await User.find({ role: role });
+      const response = {
+        status: 200,
+        message: "success",
+        data: users,
+      };
+      res.send(response);
+    }
+
+    if (paid) {
+      const users = await User.find({ paid: paid });
       const response = {
         status: 200,
         message: "success",
