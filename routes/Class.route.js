@@ -5,7 +5,7 @@ const ClassController = require("../controller/Class.controller.js");
 
 router.get("/", verifyAccessToken, ClassController.getAllClasses);
 
-router.get("/details", verifyAccessToken, ClassController.getClassesDetails);
+router.post("/details", verifyAccessToken, ClassController.getClassesDetails);
 
 router.get(
   "/status",
