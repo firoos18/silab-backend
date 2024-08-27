@@ -45,6 +45,41 @@ async function getClass(req, res, next) {
   }
 }
 
+async function getClassesDetails(req, res, next) {
+  try {
+    const { classes } = req.body;
+
+    if (!Array.isArray(classes)) {
+      return res.status(400).json({
+        status: 400,
+        message: "subjects should be an array",
+      });
+    }
+
+    const classesDetails = await Promise.all(
+      classes.map(async (classId) => {
+        const classDetails = await Class.findById(classId).populate(
+          "subjectId"
+        );
+        if (!classDetails) {
+          throw new Error(`Subject with id ${classId} not found`);
+        }
+        return classDetails.toJSON();
+      })
+    );
+
+    const response = {
+      status: 200,
+      message: "success",
+      data: classesDetails,
+    };
+
+    res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function addClass(req, res, next) {
   try {
     const result = await classSchema.validateAsync(req.body);
@@ -336,4 +371,5 @@ module.exports = {
   unregisterFromClassRoom,
   getUserRegistrationStatus,
   getUserRegisteredClass,
+  getClassesDetails,
 };
