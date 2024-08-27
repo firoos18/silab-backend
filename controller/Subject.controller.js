@@ -148,6 +148,54 @@ async function deleteSubject(req, res, next) {
   }
 }
 
+async function getSubjectsBySemesters(req, res, next) {
+  try {
+    const { semester } = req.query;
+    let subjects;
+
+    if (semester) {
+      subjects = await Subject.find({ semester: semester }).populate("classes");
+    } else {
+      subjects = await Subject.aggregate([
+        {
+          $lookup: {
+            from: "classes",
+            localField: "classes",
+            foreignField: "_id",
+            as: "classes",
+          },
+        },
+        {
+          $group: {
+            _id: "$semester",
+            subjects: {
+              $push: {
+                id: "$_id",
+                name: "$name",
+                lecturer: "$lecturer",
+                classes: "$classes",
+              },
+            },
+          },
+        },
+        {
+          $sort: { _id: 1 },
+        },
+      ]);
+    }
+
+    const response = {
+      status: 200,
+      message: "success",
+      data: subjects,
+    };
+
+    res.send(response);
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   getAllSubjects,
   addSubject,
@@ -155,4 +203,5 @@ module.exports = {
   updateSubject,
   deleteSubject,
   getSubjectsDetails,
+  getSubjectsBySemesters,
 };

@@ -5,6 +5,12 @@ const SubjectController = require("../controller/Subject.controller.js");
 
 router.get("/", verifyAccessToken, SubjectController.getAllSubjects);
 
+router.get(
+  "/semesters",
+  verifyAccessToken,
+  SubjectController.getSubjectsBySemesters
+);
+
 router.post(
   "/details",
   verifyAccessToken,
