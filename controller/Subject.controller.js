@@ -155,6 +155,32 @@ async function getSubjectsBySemesters(req, res, next) {
 
     if (semester) {
       subjects = await Subject.find({ semester: semester }).populate("classes");
+
+      subjects = [
+        {
+          _id: Number(semester),
+          subjects: subjects.map((subject) => ({
+            id: subject._id,
+            name: subject.name,
+            lecturer: subject.lecturer,
+            classes: subject.classes.map((classItem) => ({
+              _id: classItem._id,
+              subjectId: classItem.subject,
+              name: classItem.name,
+              day: classItem.day,
+              startAt: classItem.startAt,
+              endAt: classItem.endAt,
+              quota: classItem.quota,
+              isFull: classItem.isFull,
+              assistants: classItem.assistants,
+              participants: classItem.participants,
+              learningModule: classItem.learningModule,
+              __v: classItem.__v,
+              ruang: classItem.ruang,
+            })),
+          })),
+        },
+      ];
     } else {
       subjects = await Subject.aggregate([
         {
