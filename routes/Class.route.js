@@ -27,7 +27,7 @@ router.get(
 
 router.get("/:id", verifyAccessToken, ClassController.getClass);
 
-router.post("/", verifyAccessToken, ClassController.addClass);
+router.post("/", verifyAccessToken, ClassController.addClasses);
 
 router.patch("/:id", verifyAccessToken, ClassController.updateClass);
 

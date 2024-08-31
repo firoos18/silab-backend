@@ -119,6 +119,55 @@ async function addClass(req, res, next) {
   }
 }
 
+async function addClasses(req, res, next) {
+  const { classes } = req.body;
+
+  try {
+    let response;
+    let data = [];
+
+    for (let index = 0; index < classes.length; index++) {
+      const result = await classSchema.validateAsync(classes[index]);
+
+      const doesExist = await Class.findOne({
+        subjectId: result.subjectId,
+        name: result.name,
+      });
+      if (doesExist)
+        throw createError.Conflict(`${result.name} is Already Added.`);
+
+      const relatedSubject = await Subject.findById(result.subjectId);
+      if (!relatedSubject) throw createError.NotFound("Subject Not Found.");
+
+      const classRoom = new Class(result);
+      await classRoom.save();
+
+      const { error } = await supabase.from("class").insert({
+        id: classRoom.id,
+        quota: classRoom.quota,
+      });
+
+      if (error)
+        throw createError.Conflict(`Supabase Database Class Error : `, error);
+
+      relatedSubject.classes.push(classRoom._id);
+      await relatedSubject.save();
+
+      data.push(classRoom);
+    }
+
+    response = {
+      status: 200,
+      message: "success",
+      data: data,
+    };
+
+    res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function updateClass(req, res, next) {
   try {
     const { id } = req.params;
@@ -372,4 +421,5 @@ module.exports = {
   getUserRegistrationStatus,
   getUserRegisteredClass,
   getClassesDetails,
+  addClasses,
 };
