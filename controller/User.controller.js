@@ -7,8 +7,8 @@ const createError = require("http-errors");
 
 async function getAllUsers(req, res, next) {
   try {
-    const { role, paid, asisten, dosen } = req.query;
-    let regex;
+    const { role, paid } = req.query;
+
     let users;
 
     if (role) {
@@ -19,24 +19,66 @@ async function getAllUsers(req, res, next) {
       users = await User.find({ paid: paid });
     }
 
-    if (asisten) {
-      regex = new RegExp(asisten, "i");
+    if (!role && !paid) {
+      users = await User.find();
+    }
+
+    const response = {
+      status: 200,
+      message: "success",
+      data: users,
+    };
+    res.send(response);
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function getAssistants(req, res, next) {
+  const { query } = req.query;
+
+  try {
+    let users;
+
+    if (query) {
+      const regex = new RegExp(query, "i");
       users = await User.find({
         role: { $elemMatch: { $eq: "asisten" } },
         fullname: regex,
       });
+    } else {
+      users = await User.find({
+        role: { $elemMatch: { $eq: "asisten" } },
+      });
     }
 
-    if (dosen) {
-      regex = new RegExp(dosen, "i");
+    const response = {
+      status: 200,
+      message: "success",
+      data: users,
+    };
+    res.send(response);
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function getLecturer(req, res, next) {
+  const { query } = req.query;
+
+  try {
+    let users;
+
+    if (query) {
+      const regex = new RegExp(query, "i");
       users = await User.find({
         role: { $elemMatch: { $eq: "dosen" } },
         fullname: regex,
       });
-    }
-
-    if (!asisten && !dosen && !role && !paid) {
-      users = await User.find();
+    } else {
+      users = await User.find({
+        role: { $elemMatch: { $eq: "dosen" } },
+      });
     }
 
     const response = {
@@ -108,4 +150,6 @@ module.exports = {
   getAllUsers,
   getUserByNim,
   updatePaymentStatus,
+  getAssistants,
+  getLecturer,
 };

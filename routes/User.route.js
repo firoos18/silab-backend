@@ -5,6 +5,10 @@ const UserController = require("../controller/User.controller.js");
 
 router.get("/", verifyAccessToken, UserController.getAllUsers);
 
+router.get("/asisten", verifyAccessToken, UserController.getAssistants);
+
+router.get("/dosen", verifyAccessToken, UserController.getLecturer);
+
 router.get("/:nim", verifyAccessToken, UserController.getUserByNim);
 
 router.get(
