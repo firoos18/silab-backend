@@ -7,29 +7,38 @@ const createError = require("http-errors");
 
 async function getAllUsers(req, res, next) {
   try {
-    const { role, paid } = req.query;
+    const { role, paid, asisten, dosen } = req.query;
+    let regex;
+    let users;
 
     if (role) {
-      const users = await User.find({ role: role });
-      const response = {
-        status: 200,
-        message: "success",
-        data: users,
-      };
-      res.send(response);
+      users = await User.find({ role: role });
     }
 
     if (paid) {
-      const users = await User.find({ paid: paid });
-      const response = {
-        status: 200,
-        message: "success",
-        data: users,
-      };
-      res.send(response);
+      users = await User.find({ paid: paid });
     }
 
-    const users = await User.find();
+    if (asisten) {
+      regex = new RegExp(asisten, "i");
+      users = await User.find({
+        role: { $elemMatch: { $eq: "asisten" } },
+        fullname: regex,
+      });
+    }
+
+    if (dosen) {
+      regex = new RegExp(dosen, "i");
+      users = await User.find({
+        role: { $elemMatch: { $eq: "dosen" } },
+        fullname: regex,
+      });
+    }
+
+    if (!asisten && !dosen && !role && !paid) {
+      users = await User.find();
+    }
+
     const response = {
       status: 200,
       message: "success",
