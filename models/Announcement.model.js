@@ -15,9 +15,26 @@ const AnnouncementSchema = new Schema({
     type: String,
     required: true,
   },
+  detail: {
+    type: String,
+    required: false,
+  },
   posterUrl: {
     type: String,
     required: false,
+  },
+  postDate: {
+    type: String,
+    required: true,
+  },
+  dueDate: {
+    type: String,
+    required: true,
+  },
+  isPosted: {
+    type: Boolean,
+    required: true,
+    default: false,
   },
 });
 
@@ -32,7 +49,11 @@ AnnouncementSchema.set("toJSON", {
       title: ret.title,
       type: ret.type,
       desc: ret.desc,
+      detail: ret.detail,
       posterUrl: ret.posterUrl,
+      postDate: ret.postDate,
+      dueDate: ret.dueDate,
+      isPosted: ret.isPosted,
     };
   },
 });

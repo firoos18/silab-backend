@@ -43,7 +43,7 @@ async function getAnnouncement(req, res, next) {
 
 async function addAnnouncement(req, res, next) {
   try {
-    const { type, desc, title } = req.body;
+    const { type, desc, title, detail, postDate, dueDate } = req.body;
 
     let posterUrl = null;
 
@@ -51,6 +51,9 @@ async function addAnnouncement(req, res, next) {
       title: title,
       type: type,
       desc: desc,
+      detail: detail || null,
+      dueDate: dueDate,
+      postDate: postDate,
     });
 
     if (req.file) {

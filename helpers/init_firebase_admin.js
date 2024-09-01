@@ -18,6 +18,24 @@ const sendPushNotification = async (message) => {
   }
 };
 
+const broadcastAnnouncement = async (announcement) => {
+  const message = {
+    notification: {
+      title: `${announcement.title}`,
+      body: announcement.desc,
+    },
+    topic: "announcements",
+  };
+
+  try {
+    const response = await admin.messaging().send(message);
+    console.log("Successfully sent notification:", response);
+  } catch (error) {
+    console.error("Error sending notification:", error);
+  }
+};
+
 module.exports = {
   sendPushNotification,
+  broadcastAnnouncement,
 };
