@@ -6,8 +6,18 @@ const {
 } = require("../helpers/init_supabase");
 
 async function getAllAnnouncements(req, res, next) {
+  const { query } = req.query;
+
   try {
-    const announcementList = await Announcement.find();
+    let announcementList;
+
+    if (query) {
+      announcementList = await Announcement.find({
+        isPosted: query,
+      });
+    } else {
+      announcementList = await Announcement.find();
+    }
 
     const response = {
       status: 200,
