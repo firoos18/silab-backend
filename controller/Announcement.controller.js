@@ -52,8 +52,8 @@ async function addAnnouncement(req, res, next) {
       type: type,
       desc: desc,
       detail: detail || null,
-      dueDate: dueDate,
-      postDate: postDate,
+      dueDate: new Date(dueDate),
+      postDate: new Date(postDate),
     });
 
     if (req.file) {

@@ -24,11 +24,11 @@ const AnnouncementSchema = new Schema({
     required: false,
   },
   postDate: {
-    type: String,
+    type: Date,
     required: true,
   },
   dueDate: {
-    type: String,
+    type: Date,
     required: true,
   },
   isPosted: {
