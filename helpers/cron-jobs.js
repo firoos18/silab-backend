@@ -5,7 +5,7 @@ const { broadcastAnnouncement } = require("./init_firebase_admin");
 
 const checkAndPostAnnouncements = async () => {
   try {
-    const now = moment().tz("Asia/Jakarta").startOf("day").toDate();
+    const now = moment().tz("Asia/Jakarta").utc().toDate();
 
     const announcements = await Announcement.find({
       postDate: { $lte: now },

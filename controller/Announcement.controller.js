@@ -62,8 +62,8 @@ async function addAnnouncement(req, res, next) {
       type: type,
       desc: desc,
       detail: detail || null,
-      dueDate: new Date(dueDate),
-      postDate: new Date(postDate),
+      dueDate: moment.tz(dueDate, "Asia/Jakarta").utc().toDate(),
+      postDate: moment.tz(postDate, "Asia/Jakarta").utc().toDate(),
     });
 
     if (req.file) {
