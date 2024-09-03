@@ -29,6 +29,10 @@ cron.schedule("* * * * * *", checkAndPostAnnouncements, {
   timezone: "Asia/Jakarta",
 });
 
-export const cron = () => {
+const cron = () => {
   checkAndPostAnnouncements();
+};
+
+module.exports = {
+  cron,
 };
