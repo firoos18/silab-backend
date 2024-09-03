@@ -15,9 +15,9 @@ async function getAllAnnouncements(req, res, next) {
     if (query) {
       announcementList = await Announcement.find({
         isPosted: query,
-      });
+      }).sort({ postDate: -1 });
     } else {
-      announcementList = await Announcement.find();
+      announcementList = await Announcement.find().sort({ postDate: -1 });
     }
 
     const response = {
