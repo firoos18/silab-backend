@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const SubjectSchema = Schema({
+const SubjectSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -10,16 +10,36 @@ const SubjectSchema = Schema({
     type: String,
     required: true,
   },
+  semester: {
+    type: Number,
+    enum: [1, 2, 3, 4, 5, 6, 7, 8],
+    required: true,
+  },
   classes: [
     {
-      id: { type: Schema.Types.ObjectId, refs: "class", required: true },
-      name: {
-        type: String,
-        required: true,
-      },
+      type: Schema.Types.ObjectId,
+      ref: "class",
     },
-    { default: [] },
+    {
+      default: [],
+    },
   ],
+});
+
+SubjectSchema.set("toJSON", {
+  transform: (doc, ret) => {
+    ret.id = ret._id;
+    delete ret._id;
+    delete ret.__v;
+
+    return {
+      id: ret.id,
+      name: ret.name,
+      lecturer: ret.lecturer,
+      semester: ret.semester,
+      classes: ret.classes,
+    };
+  },
 });
 
 const Subject = mongoose.model("subject", SubjectSchema);

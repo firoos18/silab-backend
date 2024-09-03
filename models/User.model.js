@@ -18,14 +18,26 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
-    role: {
+    phoneNumber: {
       type: String,
-      lowercase: true,
+      required: true,
+    },
+    role: {
+      type: [{ type: String, ref: "role" }],
+      default: ["mahasiswa"],
       required: true,
     },
     password: {
       type: String,
       required: true,
+    },
+    verified: {
+      type: Boolean,
+      default: false,
+    },
+    paid: {
+      type: Boolean,
+      default: false,
     },
   },
   {
@@ -44,6 +56,23 @@ UserSchema.pre("save", async function (next) {
   } catch (error) {
     next(error);
   }
+});
+
+UserSchema.set("toJSON", {
+  transform: (doc, ret) => {
+    ret.id = ret._id;
+    delete ret._id;
+    delete ret.__v;
+
+    return {
+      id: ret.id,
+      email: ret.email,
+      fullname: ret.fullname,
+      nim: ret.nim,
+      role: ret.role,
+      paid: ret.paid,
+    };
+  },
 });
 
 UserSchema.methods.isValidPassword = async function (password) {

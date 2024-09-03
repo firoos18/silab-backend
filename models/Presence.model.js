@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const PresenceSchema = Schema({
+const PresenceSchema = new Schema({
   classId: {
     type: Schema.Types.ObjectId,
-    refs: "class",
+    ref: "class",
   },
   date: {
     type: Date,
@@ -16,7 +16,7 @@ const PresenceSchema = Schema({
   },
   participants: [
     {
-      id: { type: Schema.Types.ObjectId, refs: "user" },
+      id: { type: Schema.Types.ObjectId, ref: "user" },
       name: { type: String, required: true },
     },
     { default: [] },

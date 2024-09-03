@@ -4,9 +4,9 @@ const registerSchema = Joi.object({
   email: Joi.string().email().lowercase().required(),
   fullname: Joi.string().required(),
   nim: Joi.string().required(),
-  role: Joi.string().required(),
   password: Joi.string().min(8).required(),
-  repeat_password: Joi.ref("password"),
+  repeatPassword: Joi.ref("password"),
+  phoneNumber: Joi.string().required(),
 });
 
 const loginSchema = Joi.object({
@@ -18,6 +18,7 @@ const subjectSchema = Joi.object({
   name: Joi.string().required(),
   lecturer: Joi.string().required(),
   classes: Joi.any(),
+  semester: Joi.number().required(),
 });
 
 const classSchema = Joi.object({
@@ -26,6 +27,7 @@ const classSchema = Joi.object({
   day: Joi.string().required(),
   startAt: Joi.string().required(),
   endAt: Joi.string().required(),
+  ruang: Joi.string().required(),
   assistants: Joi.any(),
   quota: Joi.number().required(),
   isFull: Joi.boolean(),
@@ -45,6 +47,12 @@ const presenceSchema = Joi.object({
   participants: Joi.any(),
 });
 
+const resetPasswordSchema = Joi.object({
+  userId: Joi.string().required(),
+  newPassword: Joi.string().min(8).required(),
+  repeatNewPassword: Joi.ref("newPassword"),
+});
+
 module.exports = {
   registerSchema,
   loginSchema,
@@ -52,4 +60,5 @@ module.exports = {
   classSchema,
   roleSchema,
   presenceSchema,
+  resetPasswordSchema,
 };
