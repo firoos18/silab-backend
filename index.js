@@ -15,7 +15,7 @@ const PresenceRoute = require("./routes/Presence.route");
 const SelectedSubjectRoute = require("./routes/SelectedSubject.route");
 const AnnouncementRoute = require("./routes/Announcement.route");
 const cors = require("cors");
-const { cron } = require("./helpers/cron-jobs");
+const { cronJobs } = require("./helpers/cron-jobs");
 
 const app = express();
 app.use(morgan("dev"));
@@ -45,7 +45,7 @@ app.use("/role", RoleRoute);
 app.use("/presence", PresenceRoute);
 app.use("/selected-subject", SelectedSubjectRoute);
 app.use("/announcement", AnnouncementRoute);
-app.use("/cron", cron);
+app.use("/cron", cronJobs);
 
 app.use(async (req, res, next) => {
   next(createError.NotFound());
